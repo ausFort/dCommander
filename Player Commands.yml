@@ -1,0 +1,189 @@
+dCommander_Command_Heal:
+  type: command
+  debug: false
+  name: heal
+  usage: /heal (player)
+  allowed help:
+  - determine <player.has_permission[dcommander.command.heal]||<context.server>>
+  description: Heal yourself or another player fully.
+  permission: dcommander.command.heal
+  script:
+  - choose <context.args.size>:
+    - case 0:
+      - heal <player>
+      - narrate format:dCommander_Format "You have been healed!"
+    - case 1:
+      - define Target <server.match_player[<context.args.get[1]>]||null>
+      - if <def[Target]> == null {
+        - narrate format:dCommander_Format "No player can be found by that name!"
+        - queue clear
+      }
+      - heal <def[Target]>
+      - if <def[Target]> == <player||console>
+        - narrate format:dCommander_Format "You have been healed!"
+        - queue clear
+      }
+      - narrate format:dCommander_Format "<yaml[dCC].read[colors.secondary]><def[Target].name><yaml[dCC].read[colors.primary]> has been healed."
+      - narrate format:dCommander_Format "<yaml[dCC].read[colors.secondary]><player.name||console><yaml[dCC].read[colors.primary]> has healed you." targets:<def[Target]>
+    - default:
+      - narrate format:dCommander_Format "Usage: /heal (player)"
+
+dCommander_Command_Feed:
+  type: command
+  debug: false
+  name: feed
+  usage: /feed (player)
+  allowed help:
+  - determine <player.has_permission[dcommander.command.feed]||<context.server>>
+  description: Feed yourself or another player fully.
+  permission: dcommander.command.feed
+  script:
+  - choose <context.args.size>:
+    - case 0:
+      - feed <player>
+      - narrate format:dCommander_Format "You have been fed!"
+    - case 1:
+      - define Target <server.match_player[<context.args.get[1]>]||null>
+      - if <def[Target]> == null {
+        - narrate format:dCommander_Format "No player can be found by that name!"
+        - queue clear
+      }
+      - feed <def[Target]>
+      - if <def[Target]> == <player||console>
+        - narrate format:dCommander_Format "You have been fed!"
+        - queue clear
+      }
+      - narrate format:dCommander_Format "<yaml[dCC].read[colors.secondary]><def[Target].name><yaml[dCC].read[colors.primary]> has been fed."
+      - narrate format:dCommander_Format "<yaml[dCC].read[colors.secondary]><player.name||console><yaml[dCC].read[colors.primary]> has fed you." targets:<def[Target]>
+    - default:
+      - narrate format:dCommander_Format "Usage:<yaml[dCC].read[colors.secondary]> /feed (player)"
+
+dCommander_Command_Gamemode:
+  type: command
+  debug: false
+  name: gamemode
+  aliases:
+  - gm
+  - mode
+  usage: /gamemode <&lt>mode<&gt> (player)
+  allowed help:
+  - determine <player.has_permission[dcommander.command.gamemode]||<context.server>>
+  description: Changes your own, or another player's gamemode.
+  permission: dcommander.command.gamemode
+  tab complete:
+  - define V li@Creative|Survival|Adventure|Spectator|0|1|2|3
+  - choose <context.args.size>:
+    - case 0:
+      - determine <def[V]>
+    - case 1:
+      - determine <def[V].filter[starts_with[<context.args.get[1]>]]>
+    - case 2:
+      - determine <server.list_online_players.parse[name].filter[starts_with[<context.args.get[2]>]]>
+  script:
+  - define Valid li@Creative|Survival|Adventure|Spectator|0|1|2|3
+  - choose <context.args.size>:
+    - case 1:
+      - if <context.server> {
+        - narrate format:dCommander_Format "You must specify a player when in console!"
+        - queue clear
+      }
+      - define Target <player>
+    - case 2:
+      - define Target <server.match_player[<context.args.get[2]>]||null>
+      - if <def[Target]> == null {
+        - narrate format:dCommander_Format "No player can be found by that name!"
+        - queue clear
+      }
+    - default:
+      - narrate format:dCommander_Format "Usage:<yaml[dCC].read[colors.secondary]> /gamemode <&lt>mode<&gt> (player)"
+      - queue clear
+
+  - define Mode <def[Valid].filter[starts_with[<context.args.get[1]>]].get[1]||null>
+  - if <def[Mode]> == null {
+    - narrate format:dCommander_Format "Invalid Gamemode! Valid modes are: <yaml[dCC].read[colors.secondary]><def[Valid].separated_by[<yaml[dCC].read[colors.primary]>, <yaml[dCC].read[colors.secondary]>]><yaml[dCC].read[colors.primary]>."
+    - queue clear
+  }
+  - choose <def[Mode]>:
+    - case 0:
+      - define Mode Survival
+    - case 1:
+      - define Mode Creative
+    - case 2:
+      - define Mode Adventure
+    - case 3:
+      - define Mode Spectator
+
+  - adjust <def[Target]> gamemode:<def[Mode]>
+  - if <def[Target]> == <player||null> {
+    - narrate format:dCommander_Format "Your gamemode is now <yaml[dCC].read[colors.secondary]><def[Mode]><yaml[dCC].read[colors.primary]>."
+    - queue clear
+  }
+  - narrate format:dCommander_Format "Set the gamemode of <yaml[dCC].read[colors.secondary]><def[Target].name> <yaml[dCC].read[colors.primary]>to <yaml[dCC].read[colors.secondary]><def[Mode]><yaml[dCC].read[colors.primary]>."
+  - narrate format:dCommander_Format "<yaml[dCC].read[colors.secondary]><player.name||console> <yaml[dCC].read[colors.primary]>set your gamemode to <yaml[dCC].read[colors.secondary]><def[Mode]><yaml[dCC].read[colors.primary]>." targets:<def[Target]>
+
+
+dCommander_Command_Fly:
+  type: command
+  debug: false
+  name: fly
+  aliases:
+  - flymode
+  - canfly
+  - wings
+  usage: /fly (on/off/{toggle}) (player)
+  allowed help:
+  - determine <player.has_permission[dcommander.command.fly]||<context.server>>
+  description: Changes whether you or another player can fly.
+  permission: dcommander.command.fly
+  script:
+  - define Valid li@On|Off|Toggle
+  - choose <context.args.size>:
+    - case 0:
+      - if <context.server> {
+        - narrate format:dCommander_Format "You must specify a player when in console!"
+        - queue clear
+      }
+      - define Mode Toggle
+      - define Target <player>
+    - case 1:
+      - if <context.server> {
+        - narrate format:dCommander_Format "You must specify a player when in console!"
+        - queue clear
+      }
+      - define Mode <def[Valid].filter[starts_with[<context.args.get[1]>]].get[1]||null>
+      - if <def[Mode]> == null {
+        - narrate format:dCommander_Format "Invalid mode! Valid modes are: <yaml[dCC].read[colors.secondary]><def[Valid].separated_by[<yaml[dCC].read[colors.primary]>, <yaml[dCC].read[colors.secondary]>]><yaml[dCC].read[colors.primary]>."
+        - queue clear
+      }
+      - define Target <player>
+    - case 2:
+      - define Mode <def[Valid].filter[starts_with[<context.args.get[1]>]].get[1]||null>
+      - if <def[Mode]> == null {
+        - narrate format:dCommander_Format "Invalid mode! Valid modes are: <yaml[dCC].read[colors.secondary]><def[Valid].separated_by[<yaml[dCC].read[colors.primary]>, <yaml[dCC].read[colors.secondary]>]><yaml[dCC].read[colors.primary]>."
+        - queue clear
+      }
+      - define Target <server.match_player[<context.args.get[2]>]||null>
+      - if <def[Target]> == null {
+        - narrate format:dCommander_Format "No player can be found by that name!"
+        - queue clear
+      }
+    - default:
+      - narrate format:dCommander_Format "Usage:<yaml[dCC].read[colors.secondary]> /fly (on/off/{toggle}) (player)"
+      - queue clear
+
+  - choose <def[Mode]>:
+    - case On:
+      - define MVal true
+    - case Off:
+      - define MVal false
+    - case Toggle:
+      - define MVal <def[Target].can_fly.not>
+
+  - adjust <def[Target]> can_fly:<def[MVal]>
+  - define Enabled <t[<def[Target].can_fly>]:Enabled||Disabled>
+  - if <def[Target]> == <player||null> {
+    - narrate format:dCommander_Format "Fly mode has been <yaml[dCC].read[colors.secondary]><def[Enabled]><yaml[dCC].read[colors.primary]>."
+    - queue clear
+  }
+  - narrate format:dCommander_Format "Fly mode has been <yaml[dCC].read[colors.secondary]><def[Enabled]><yaml[dCC].read[colors.primary]> for player <yaml[dCC].read[colors.secondary]><def[Target].name><yaml[dCC].read[colors.primary]>."
+  - narrate format:dCommander_Format "Your fly mode has been <yaml[dCC].read[colors.secondary]><def[Enabled]><yaml[dCC].read[colors.primary]> by <yaml[dCC].read[colors.secondary]><player.name||Console><yaml[dCC].read[colors.primary]>." targets:<def[Target]>

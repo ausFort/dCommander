@@ -1,0 +1,31 @@
+dCommander_Main:
+  type: world
+  debug: false
+  events:
+    on server start:
+      - announce to_console "<&2>dCommander loading!"
+      - if <server.has_file[dCommander_Config.yml].not> {
+        - inject locally initialise_config
+        }
+      - announce to_console "<&2>dCommander successfully loaded."
+
+  initialise_config:
+    - announce to_console "<&c>Generating new dCommander configuration file."
+    - yaml create id:dCC
+    - yaml set colors.primary:&f id:dCC
+    - yaml set colors.secondary:&6 id:dCC
+    - yaml savefile:dCommander_Config.yml id:dCC
+    - announce to_console "<&2>dCommander configuration file generated."
+
+
+dCommander_Format:
+  type: format
+  debug: false
+  format: <proc[PC].context[<&7>[<yaml[dCC].read[colors.secondary]>dCommander<&7>]<yaml[dCC].read[colors.primary]> <text>]>
+
+PC:
+  type: procedure
+  debug: false
+  definitions: M
+  script:
+  - determine <def[M].replace[regex:&([0-9a-fA-Fk-oK-OrR])].with[<red.substring[1,1]>$1]>

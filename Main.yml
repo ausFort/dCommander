@@ -20,7 +20,6 @@ dCommander_Main:
     - yaml savefile:dCommander_Config.yml id:dCC
     - announce to_console "<&2>dCommander configuration file generated."
 
-
 dCommander_Format:
   type: format
   debug: false
@@ -37,10 +36,10 @@ dPCP:
   type: procedure
   debug: false
   script:
-  - determine <proc[dPC].context[<proc[dPCP]>]>
+  - determine <yaml[dCC].read[Colors.Primary]>
 
 dPCS:
   type: procedure
   debug: false
   script:
-  - determine <proc[dPC].context[<proc[dPCS]>]>
+  - determine <yaml[dCC].read[Colors.Secondary]>

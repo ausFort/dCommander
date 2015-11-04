@@ -43,3 +43,21 @@ dPCS:
   debug: false
   script:
   - determine <yaml[dCC].read[Colors.Secondary]>
+
+dCommander_Require_Ingame_Handler:
+  type: task
+  debug: false
+  script:
+  - if <context.server> {
+    - narrate format:dCommander_Format "You must be ingame to use this command!"
+    - queue clear
+  }
+
+dCommander_Require_Player_Handler:
+  type: task
+  debug: false
+  script:
+  - if <context.server> {
+    - narrate format:dCommander_Format "You must specify a player when in console!"
+    - queue clear
+  }

@@ -4,27 +4,31 @@ dCommander_Command_Heal:
   name: heal
   usage: /heal (player)
   allowed help:
-  - determine <player.has_permission[dcommander.command.heal]||<context.server>>
+  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
   description: Heal yourself or another player fully.
   permission: dcommander.command.heal
   script:
   - choose <context.args.size>:
     - case 0:
-      - heal <player>
-      - narrate format:dCommander_Format "You have been healed!"
+      - inject s@dCommander_Require_Player_Handler
+      - define Target <player>
     - case 1:
       - define Target <server.match_player[<context.args.get[1]>]||null>
       - if <def[Target]> == null {
         - narrate format:dCommander_Format "No player can be found by that name!"
         - queue clear
       }
-      - heal <def[Target]>
-      - if <def[Target]> == <player||console>
-        - narrate format:dCommander_Format "You have been healed!"
-        - queue clear
-      }
-      - narrate format:dCommander_Format "<proc[dPCS]><def[Target].name><proc[dPCP]> has been healed."
-      - narrate format:dCommander_Format "<proc[dPCS]><player.name||console><proc[dPCP]> has healed you." targets:<def[Target]>
+    - default:
+      - narrate format:dCommander_Format "Usage:<proc[dPCS]> /heal (player)"
+      - queue clear
+
+    - heal <def[Target]>
+    - if <def[Target]> == <player||null>
+      - narrate format:dCommander_Format "You have been healed!"
+      - queue clear
+    }
+    - narrate format:dCommander_Format "<proc[dPCS]><def[Target].name><proc[dPCP]> has been healed."
+    - narrate format:dCommander_Format "<proc[dPCS]><player.name||console><proc[dPCP]> has healed you." targets:<def[Target]>
     - default:
       - narrate format:dCommander_Format "Usage: /heal (player)"
 
@@ -34,27 +38,32 @@ dCommander_Command_Feed:
   name: feed
   usage: /feed (player)
   allowed help:
-  - determine <player.has_permission[dcommander.command.feed]||<context.server>>
+  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
   description: Feed yourself or another player fully.
   permission: dcommander.command.feed
   script:
   - choose <context.args.size>:
     - case 0:
-      - feed <player>
-      - narrate format:dCommander_Format "You have been fed!"
+      - inject s@dCommander_Require_Player_Handler
+      - define Target <player>
     - case 1:
       - define Target <server.match_player[<context.args.get[1]>]||null>
       - if <def[Target]> == null {
         - narrate format:dCommander_Format "No player can be found by that name!"
         - queue clear
       }
-      - feed <def[Target]>
-      - if <def[Target]> == <player||console>
-        - narrate format:dCommander_Format "You have been fed!"
-        - queue clear
-      }
-      - narrate format:dCommander_Format "<proc[dPCS]><def[Target].name><proc[dPCP]> has been fed."
-      - narrate format:dCommander_Format "<proc[dPCS]><player.name||console><proc[dPCP]> has fed you." targets:<def[Target]>
+    - default:
+      - narrate format:dCommander_Format "Usage:<proc[dPCS]> /feed (player)"
+      - queue clear
+
+
+    - feed <def[Target]>
+    - if <def[Target]> == <player||null>
+      - narrate format:dCommander_Format "You have been fed!"
+      - queue clear
+    }
+    - narrate format:dCommander_Format "<proc[dPCS]><def[Target].name><proc[dPCP]> has been fed."
+    - narrate format:dCommander_Format "<proc[dPCS]><player.name||console><proc[dPCP]> has fed you." targets:<def[Target]>
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dPCS]> /feed (player)"
 
@@ -67,7 +76,7 @@ dCommander_Command_Gamemode:
   - mode
   usage: /gamemode <&lt>mode<&gt> (player)
   allowed help:
-  - determine <player.has_permission[dcommander.command.gamemode]||<context.server>>
+  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
   description: Changes your own, or another player's gamemode.
   permission: dcommander.command.gamemode
   tab complete:
@@ -83,10 +92,7 @@ dCommander_Command_Gamemode:
   - define Valid li@Creative|Survival|Adventure|Spectator|0|1|2|3
   - choose <context.args.size>:
     - case 1:
-      - if <context.server> {
-        - narrate format:dCommander_Format "You must specify a player when in console!"
-        - queue clear
-      }
+      - inject s@dCommander_Require_Player_Handler
       - define Target <player>
     - case 2:
       - define Target <server.match_player[<context.args.get[2]>]||null>
@@ -132,24 +138,18 @@ dCommander_Command_Fly:
   - wings
   usage: /fly (on/off/{toggle}) (player)
   allowed help:
-  - determine <player.has_permission[dcommander.command.fly]||<context.server>>
+  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
   description: Changes whether you or another player can fly.
   permission: dcommander.command.fly
   script:
   - define Valid li@On|Off|Toggle
   - choose <context.args.size>:
     - case 0:
-      - if <context.server> {
-        - narrate format:dCommander_Format "You must specify a player when in console!"
-        - queue clear
-      }
+      - inject s@dCommander_Require_Player_Handler
       - define Mode Toggle
       - define Target <player>
     - case 1:
-      - if <context.server> {
-        - narrate format:dCommander_Format "You must specify a player when in console!"
-        - queue clear
-      }
+      - inject s@dCommander_Require_Player_Handler
       - define Mode <def[Valid].filter[starts_with[<context.args.get[1]>]].get[1]||null>
       - if <def[Mode]> == null {
         - narrate format:dCommander_Format "Invalid mode! Valid modes are: <proc[dPCS]><def[Valid].separated_by[<proc[dPCP]>, <proc[dPCS]>]><proc[dPCP]>."

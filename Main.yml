@@ -17,6 +17,8 @@ dCommander_Main:
     - yaml create id:dCC
     - yaml set colors.primary:&f id:dCC
     - yaml set colors.secondary:&6 id:dCC
+    - yaml set teleport.delay.enabled:false id:dCC
+    - yaml set teleport.delay.amount:3 id:dCC
     - yaml savefile:dCommander_Config.yml id:dCC
     - announce to_console "<&2>dCommander configuration file generated."
 

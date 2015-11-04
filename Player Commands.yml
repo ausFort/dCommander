@@ -56,7 +56,6 @@ dCommander_Command_Feed:
       - narrate format:dCommander_Format "Usage:<proc[dPCS]> /feed (player)"
       - queue clear
 
-
     - feed <def[Target]>
     - if <def[Target]> == <player||null>
       - narrate format:dCommander_Format "You have been fed!"

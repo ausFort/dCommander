@@ -1,0 +1,122 @@
+dCommander_Command_SetSpawn:
+  type: command
+  debug: false
+  name: setspawn
+  usage: /setspawn
+  allowed help:
+  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  description: Sets the current world's spawn location, to your position.
+  permission: dcommander.command.setspawn
+  script:
+  - inject s@dCommander_Require_Ingame_Handler
+  - adjust <player.world> spawn_location:<player.location.block>
+  - narrate format:dCommander_Format "Set the spawn of <proc[dPCS]><player.world.name><proc[dPCP]> to <proc[dPCS]><player.location.block.simple.replace[,<player.world.name>]><proc[dPCP]>."
+
+dCommander_Command_Spawn:
+  type: command
+  debug: false
+  name: spawn
+  usage: /spawn (player)
+  allowed help:
+  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  description: Teleports you or another player to the spawn of the world they are in.
+  permission: dcommander.command.spawn
+  script:
+  - choose <context.args.size>:
+    - case 0:
+      - inject s@dCommander_Require_Player_Handler
+      - define Target <player>
+    - case 1:
+      - define Target <server.match_player[<context.args.get[1]>]||null>
+      - if <def[Target]> == null {
+        - narrate format:dCommander_Format "No player can be found by that name!"
+        - queue clear
+      }
+    - default:
+      - narrate format:dCommander_Format "Usage:<proc[dPCS]> /spawn (player)"
+      - queue clear
+
+  - teleport <def[Target]> <def[Target].world.spawn_location>
+  - if <def[Target]> == <player> {
+    - narrate format:dCommander_Format "You have been teleported to spawn!"
+    - queue clear
+  }
+  - narrate format:dCommander_Format "<proc[dPCS]><def[Target].name><proc[dPCP]> has been teleported to spawn."
+  - narrate format:dCommander_Format "<proc[dPCS]><player.name||console><proc[dPCP]> has teleported you to spawn." targets:<def[Target]>
+
+dCommander_Command_Teleport:
+  type: command
+  name: teleport
+  aliases:
+  - tp
+  - port
+  - tele
+  usage: /teleport [<&lt>destination player<&gt>/<&lt>target player<&gt> <&lt>destination player<&gt>]
+  allowed help:
+  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  description: Teleport to another player, or teleport someone else. Can teleport to offline players.
+  permission: dcommander.command.teleport
+  script:
+  - choose <context.args.size>:
+    - case 1:
+      - inject s@dCommander_Require_Player_Handler
+      - define Destination <server.match_offline_player[<context.args.get[1]>]||null>
+      - if <def[Destination]> == null {
+        - narrate format:dCommander_Format "No player can be found by that name!"
+        - queue clear
+      }
+      - define Target <player>
+    - case 2:
+      - define Target <server.match_player[<context.args.get[1]>]||null>
+      - if <def[Target]> == null {
+        - narrate format:dCommander_Format "No player can be found by that name!"
+        - queue clear
+      }
+      - define Destination <server.match_offline_player[<context.args.get[2]>]||null>
+      - if <def[Destination]> == null {
+        - narrate format:dCommander_Format "No player can be found by that name!"
+        - queue clear
+      }
+    - default:
+      - narrate format:dCommander_Format "Usage:<proc[dPCS]> /teleport [<&lt>destination player<&gt>/<&lt>target player<&gt> <&lt>destination player<&gt>]"
+      - queue clear
+
+  - if <def[Target]> == <def[Destination]> {
+    - narrate format:dCommander_Format "Cannot teleport a player to themself!"
+    - queue clear
+  }
+  - teleport <def[Target]> <def[Destination].location>
+  - narrate format:dCommander_Format "You have been teleported to <proc[dPCS]><def[Destination].name><proc[dPCP]>." targets:<def[Target]>
+
+dCommander_Command_Teleport_Here:
+  type: command
+  debug: false
+  name: teleporthere
+  aliases:
+  - tphere
+  - heretp
+  - telehere
+  - porthere
+  usage: /teleporthere <&lt>player<&gt>
+  allowed help:
+  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  description: Teleport another player to your location.
+  permission: dcommander.command.teleporthere
+  script:
+  - inject s@dCommander_Require_Ingame_Handler
+  - choose <context.args.size>:
+    - case 1:
+      - define Target <server.match_player[<context.args.get[1]>]||null>
+      - if <def[Target]> == null {
+        - narrate format:dCommander_Format "No player can be found by that name!"
+        - queue clear
+      }
+      - if <def[Target]> == <player> {
+        - narrate format:dCommander_Format "You cannot teleport yourself to yourself!"
+        - queue clear
+      }
+      - teleport <def[Target]> <player.location>
+      - narrate format:dCommander_Format "<proc[dPCS]><def[Target].name><proc[dPCP]> has been teleported to you!"
+      - narrate format:dCommander_Format "<proc[dPCS]><player.name><proc[dPCP]> teleported you to them!" targets:<def[Target]>
+    - default:
+      - narrate format:dCommander_Format "Usage:<proc[dPCS]> /teleporthere <&lt>player<&gt>"

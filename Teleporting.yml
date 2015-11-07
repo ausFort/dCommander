@@ -87,6 +87,9 @@ dCommander_Command_Teleport:
   }
   - teleport <def[Target]> <def[Destination].location>
   - narrate format:dCommander_Format "You have been teleported to <proc[dPCS]><def[Destination].name><proc[dPCP]>." targets:<def[Target]>
+  - if <def[Target]> != <player> {
+    - narrate format:dCommander_Format "<proc[dCPS]><def[Target].name><proc[dCPP]> was teleported to <proc[dCPS]><def[Destination].name><proc[dCPP]>."
+  }
 
 dCommander_Command_Teleport_Here:
   type: command

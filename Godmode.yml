@@ -27,14 +27,14 @@ dCommander_Command_Godmode:
       }
       - define Mode <def[Valid].filter[starts_with[<context.args.get[1]>]].get[1]||null>
       - if <def[Mode]> == null {
-        - narrate format:dCommander_Format "Invalid mode! Valid modes are: <proc[dPCS]><def[Valid].separated_by[<proc[dPCP]>, <proc[dPCS]>]><proc[dPCP]>."
+        - narrate format:dCommander_Format "Invalid mode! Valid modes are: <proc[dCPS]><def[Valid].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
         - queue clear
       }
       - define Target <player>
     - case 2:
       - define Mode <def[Valid].filter[starts_with[<context.args.get[1]>]].get[1]||null>
       - if <def[Mode]> == null {
-        - narrate format:dCommander_Format "Invalid mode! Valid modes are: <proc[dPCS]><def[Valid].separated_by[<proc[dPCP]>, <proc[dPCS]>]><proc[dPCP]>."
+        - narrate format:dCommander_Format "Invalid mode! Valid modes are: <proc[dCPS]><def[Valid].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
         - queue clear
       }
       - define Target <server.match_player[<context.args.get[2]>]||null>
@@ -43,7 +43,7 @@ dCommander_Command_Godmode:
         - queue clear
       }
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dPCS]> /fly (on/off/{toggle}) (player)"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> /fly (on/off/{toggle}) (player)"
       - queue clear
 
   - choose <def[Mode]>:
@@ -62,11 +62,11 @@ dCommander_Command_Godmode:
   }
   - define Enabled <t[<def[Target].has_flag[dCommander.GodMode]>]:Enabled||Disabled>
   - if <def[Target]> == <player||null> {
-    - narrate format:dCommander_Format "Your god mode has been <proc[dPCS]><def[Enabled]><proc[dPCP]>."
+    - narrate format:dCommander_Format "Your god mode has been <proc[dCPS]><def[Enabled]><proc[dCPP]>."
     - queue clear
   }
-  - narrate format:dCommander_Format "God mode has been <proc[dPCS]><def[Enabled]><proc[dPCP]> for player <proc[dPCS]><def[Target].name><proc[dPCP]>."
-  - narrate format:dCommander_Format "Your god mode has been <proc[dPCS]><def[Enabled]><proc[dPCP]> by <proc[dPCS]><player.name||Console><proc[dPCP]>." targets:<def[Target]>
+  - narrate format:dCommander_Format "God mode has been <proc[dCPS]><def[Enabled]><proc[dCPP]> for player <proc[dCPS]><def[Target].name><proc[dCPP]>."
+  - narrate format:dCommander_Format "Your god mode has been <proc[dCPS]><def[Enabled]><proc[dCPP]> by <proc[dCPS]><player.name||Console><proc[dCPP]>." targets:<def[Target]>
 
 
 dCommander_Handler_GodMode:

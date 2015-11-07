@@ -1,31 +1,34 @@
-dCommander_Main:
+dCommander_Initialise_Main:
   type: world
   debug: false
   events:
     on server start:
-      - announce to_console "<&2>dCommander loading!"
-      - if <server.has_file[dCommander_Config.yml].not> {
+      - wait 3s
+      - if <server.has_file[/dCommander/config.yml].not> {
         - inject locally initialise_config
       }
       else {
-        - yaml load:dCommander_Config.yml id:dCC
+        - yaml load:/dCommander/config.yml fix_formatting id:dCommander_Config
       }
-      - announce to_console "<&2>dCommander successfully loaded."
+      - wait 1t
+      - announce to_console format:dCommander_Format "dCommander successfully loaded."
+    on shutdown:
+      - if <yaml.list.contains[dCommander_Config]> {
+        - yaml savefile:/dCommander/config.yml id:dCommander_Config
+      }
+      }
 
   initialise_config:
-    - announce to_console "<&c>Generating new dCommander configuration file."
-    - yaml create id:dCC
-    - yaml set colors.primary:&f id:dCC
-    - yaml set colors.secondary:&6 id:dCC
-    - yaml set teleport.delay.enabled:false id:dCC
-    - yaml set teleport.delay.amount:3 id:dCC
-    - yaml savefile:dCommander_Config.yml id:dCC
-    - announce to_console "<&2>dCommander configuration file generated."
+    - yaml create id:dCommander_Config
+    - yaml set colors.primary:&f id:dCommander_Config
+    - yaml set colors.secondary:&6 id:dCommander_Config
+    - yaml savefile:/dCommander/config.yml id:dCommander_Config
+    - announce to_console format:dCommander_Format "Generated new configuration."
 
 dCommander_Format:
   type: format
   debug: false
-  format: <proc[dPC].context[&7[<proc[dPCS]>dCommander&7]<proc[dPCP]> <text>]>
+  format: <proc[dPC].context[&7[<proc[dCPS]>dCommander&7]<proc[dCPP]> <text>]>
 
 dPC:
   type: procedure
@@ -34,17 +37,17 @@ dPC:
   script:
   - determine <def[M].replace[regex:&([0-9a-fA-Fk-oK-OrR])].with[<red.substring[1,1]>$1]>
 
-dPCP:
+dCPP:
   type: procedure
   debug: false
   script:
-  - determine <yaml[dCC].read[Colors.Primary]>
+  - determine <yaml[dCommander_Config].read[Colors.Primary]>
 
-dPCS:
+dCPS:
   type: procedure
   debug: false
   script:
-  - determine <yaml[dCC].read[Colors.Secondary]>
+  - determine <yaml[dCommander_Config].read[Colors.Secondary]>
 
 dCommander_Require_Ingame_Handler:
   type: task

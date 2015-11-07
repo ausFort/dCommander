@@ -19,7 +19,7 @@ dCommander_Command_Heal:
         - queue clear
       }
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dPCS]> /heal (player)"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
       - queue clear
 
     - heal <def[Target]>
@@ -27,8 +27,8 @@ dCommander_Command_Heal:
       - narrate format:dCommander_Format "You have been healed!"
       - queue clear
     }
-    - narrate format:dCommander_Format "<proc[dPCS]><def[Target].name><proc[dPCP]> has been healed."
-    - narrate format:dCommander_Format "<proc[dPCS]><player.name||console><proc[dPCP]> has healed you." targets:<def[Target]>
+    - narrate format:dCommander_Format "<proc[dCPS]><def[Target].name><proc[dCPP]> has been healed."
+    - narrate format:dCommander_Format "<proc[dCPS]><player.name||console><proc[dCPP]> has healed you." targets:<def[Target]>
     - default:
       - narrate format:dCommander_Format "Usage: /heal (player)"
 
@@ -53,7 +53,7 @@ dCommander_Command_Feed:
         - queue clear
       }
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dPCS]> /feed (player)"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
       - queue clear
 
     - feed <def[Target]>
@@ -61,10 +61,10 @@ dCommander_Command_Feed:
       - narrate format:dCommander_Format "You have been fed!"
       - queue clear
     }
-    - narrate format:dCommander_Format "<proc[dPCS]><def[Target].name><proc[dPCP]> has been fed."
-    - narrate format:dCommander_Format "<proc[dPCS]><player.name||console><proc[dPCP]> has fed you." targets:<def[Target]>
+    - narrate format:dCommander_Format "<proc[dCPS]><def[Target].name><proc[dCPP]> has been fed."
+    - narrate format:dCommander_Format "<proc[dCPS]><player.name||console><proc[dCPP]> has fed you." targets:<def[Target]>
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dPCS]> /feed (player)"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> /feed (player)"
 
 dCommander_Command_Gamemode:
   type: command
@@ -100,12 +100,12 @@ dCommander_Command_Gamemode:
         - queue clear
       }
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dPCS]> /gamemode <&lt>mode<&gt> (player)"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
       - queue clear
 
   - define Mode <def[Valid].filter[starts_with[<context.args.get[1]>]].get[1]||null>
   - if <def[Mode]> == null {
-    - narrate format:dCommander_Format "Invalid Gamemode! Valid modes are: <proc[dPCS]><def[Valid].separated_by[<proc[dPCP]>, <proc[dPCS]>]><proc[dPCP]>."
+    - narrate format:dCommander_Format "Invalid Gamemode! Valid modes are: <proc[dCPS]><def[Valid].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
     - queue clear
   }
   - choose <def[Mode]>:
@@ -120,11 +120,11 @@ dCommander_Command_Gamemode:
 
   - adjust <def[Target]> gamemode:<def[Mode]>
   - if <def[Target]> == <player||null> {
-    - narrate format:dCommander_Format "Your gamemode is now <proc[dPCS]><def[Mode]><proc[dPCP]>."
+    - narrate format:dCommander_Format "Your gamemode is now <proc[dCPS]><def[Mode]><proc[dCPP]>."
     - queue clear
   }
-  - narrate format:dCommander_Format "Set the gamemode of <proc[dPCS]><def[Target].name> <proc[dPCP]>to <proc[dPCS]><def[Mode]><proc[dPCP]>."
-  - narrate format:dCommander_Format "<proc[dPCS]><player.name||console> <proc[dPCP]>set your gamemode to <proc[dPCS]><def[Mode]><proc[dPCP]>." targets:<def[Target]>
+  - narrate format:dCommander_Format "Set the gamemode of <proc[dCPS]><def[Target].name> <proc[dCPP]>to <proc[dCPS]><def[Mode]><proc[dCPP]>."
+  - narrate format:dCommander_Format "<proc[dCPS]><player.name||console> <proc[dCPP]>set your gamemode to <proc[dCPS]><def[Mode]><proc[dCPP]>." targets:<def[Target]>
 
 
 dCommander_Command_Fly:
@@ -151,14 +151,14 @@ dCommander_Command_Fly:
       - inject s@dCommander_Require_Player_Handler
       - define Mode <def[Valid].filter[starts_with[<context.args.get[1]>]].get[1]||null>
       - if <def[Mode]> == null {
-        - narrate format:dCommander_Format "Invalid mode! Valid modes are: <proc[dPCS]><def[Valid].separated_by[<proc[dPCP]>, <proc[dPCS]>]><proc[dPCP]>."
+        - narrate format:dCommander_Format "Invalid mode! Valid modes are: <proc[dCPS]><def[Valid].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
         - queue clear
       }
       - define Target <player>
     - case 2:
       - define Mode <def[Valid].filter[starts_with[<context.args.get[1]>]].get[1]||null>
       - if <def[Mode]> == null {
-        - narrate format:dCommander_Format "Invalid mode! Valid modes are: <proc[dPCS]><def[Valid].separated_by[<proc[dPCP]>, <proc[dPCS]>]><proc[dPCP]>."
+        - narrate format:dCommander_Format "Invalid mode! Valid modes are: <proc[dCPS]><def[Valid].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
         - queue clear
       }
       - define Target <server.match_player[<context.args.get[2]>]||null>
@@ -167,7 +167,7 @@ dCommander_Command_Fly:
         - queue clear
       }
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dPCS]> /fly (on/off/{toggle}) (player)"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
       - queue clear
 
   - choose <def[Mode]>:
@@ -181,8 +181,8 @@ dCommander_Command_Fly:
   - adjust <def[Target]> can_fly:<def[MVal]>
   - define Enabled <t[<def[Target].can_fly>]:Enabled||Disabled>
   - if <def[Target]> == <player||null> {
-    - narrate format:dCommander_Format "Fly mode has been <proc[dPCS]><def[Enabled]><proc[dPCP]>."
+    - narrate format:dCommander_Format "Fly mode has been <proc[dCPS]><def[Enabled]><proc[dCPP]>."
     - queue clear
   }
-  - narrate format:dCommander_Format "Fly mode has been <proc[dPCS]><def[Enabled]><proc[dPCP]> for player <proc[dPCS]><def[Target].name><proc[dPCP]>."
-  - narrate format:dCommander_Format "Your fly mode has been <proc[dPCS]><def[Enabled]><proc[dPCP]> by <proc[dPCS]><player.name||Console><proc[dPCP]>." targets:<def[Target]>
+  - narrate format:dCommander_Format "Fly mode has been <proc[dCPS]><def[Enabled]><proc[dCPP]> for player <proc[dCPS]><def[Target].name><proc[dCPP]>."
+  - narrate format:dCommander_Format "Your fly mode has been <proc[dCPS]><def[Enabled]><proc[dCPP]> by <proc[dCPS]><player.name||Console><proc[dCPP]>." targets:<def[Target]>

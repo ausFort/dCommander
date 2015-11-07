@@ -10,7 +10,7 @@ dCommander_Command_SetSpawn:
   script:
   - inject s@dCommander_Require_Ingame_Handler
   - adjust <player.world> spawn_location:<player.location.block>
-  - narrate format:dCommander_Format "Set the spawn of <proc[dPCS]><player.world.name><proc[dPCP]> to <proc[dPCS]><player.location.block.simple.replace[,<player.world.name>]><proc[dPCP]>."
+  - narrate format:dCommander_Format "Set the spawn of <proc[dCPS]><player.world.name><proc[dCPP]> to <proc[dCPS]><player.location.block.simple.replace[,<player.world.name>]><proc[dCPP]>."
 
 dCommander_Command_Spawn:
   type: command
@@ -33,7 +33,7 @@ dCommander_Command_Spawn:
         - queue clear
       }
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dPCS]> /spawn (player)"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
       - queue clear
 
   - teleport <def[Target]> <def[Target].world.spawn_location>
@@ -41,8 +41,8 @@ dCommander_Command_Spawn:
     - narrate format:dCommander_Format "You have been teleported to spawn!"
     - queue clear
   }
-  - narrate format:dCommander_Format "<proc[dPCS]><def[Target].name><proc[dPCP]> has been teleported to spawn."
-  - narrate format:dCommander_Format "<proc[dPCS]><player.name||console><proc[dPCP]> has teleported you to spawn." targets:<def[Target]>
+  - narrate format:dCommander_Format "<proc[dCPS]><def[Target].name><proc[dCPP]> has been teleported to spawn."
+  - narrate format:dCommander_Format "<proc[dCPS]><player.name||console><proc[dCPP]> has teleported you to spawn." targets:<def[Target]>
 
 dCommander_Command_Teleport:
   type: command
@@ -78,7 +78,7 @@ dCommander_Command_Teleport:
         - queue clear
       }
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dPCS]> /teleport [<&lt>destination player<&gt>/<&lt>target player<&gt> <&lt>destination player<&gt>]"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
       - queue clear
 
   - if <def[Target]> == <def[Destination]> {
@@ -86,7 +86,7 @@ dCommander_Command_Teleport:
     - queue clear
   }
   - teleport <def[Target]> <def[Destination].location>
-  - narrate format:dCommander_Format "You have been teleported to <proc[dPCS]><def[Destination].name><proc[dPCP]>." targets:<def[Target]>
+  - narrate format:dCommander_Format "You have been teleported to <proc[dCPS]><def[Destination].name><proc[dCPP]>." targets:<def[Target]>
   - if <def[Target]> != <player> {
     - narrate format:dCommander_Format "<proc[dCPS]><def[Target].name><proc[dCPP]> was teleported to <proc[dCPS]><def[Destination].name><proc[dCPP]>."
   }
@@ -119,7 +119,7 @@ dCommander_Command_Teleport_Here:
         - queue clear
       }
       - teleport <def[Target]> <player.location>
-      - narrate format:dCommander_Format "<proc[dPCS]><def[Target].name><proc[dPCP]> has been teleported to you!"
-      - narrate format:dCommander_Format "<proc[dPCS]><player.name><proc[dPCP]> teleported you to them!" targets:<def[Target]>
+      - narrate format:dCommander_Format "<proc[dCPS]><def[Target].name><proc[dCPP]> has been teleported to you!"
+      - narrate format:dCommander_Format "<proc[dCPS]><player.name><proc[dCPP]> teleported you to them!" targets:<def[Target]>
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dPCS]> /teleporthere <&lt>player<&gt>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"

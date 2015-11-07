@@ -10,18 +10,35 @@ dCommander_Initialise_Main:
       else {
         - yaml load:/dCommander/config.yml fix_formatting id:dCommander_Config
       }
+      - if <server.list_scripts.parse[Name].contains[dCommander_Command_Warp]> || <server.list_scripts.parse[name].contains[dCommander_Command_SetWarp]> {
+        - if <server.has_file[/dCommander/warps.yml].not> {
+          - yaml create id:dCommander_Warps
+          - yaml savefile:/dCommander/warps.yml id:dCommander_Warps
+          - announce to_console format:dCommander_Format "Generated warps file."
+        }
+        else {
+          - yaml load:/dCommander/warps.yml fix_formatting id:dCommander_Warps
+          - announce to_console format:dCommander_Format "Loaded warps file."
+        }
+        - run s@dCommander_Warps_Save delay:1m instantly
+      }
       - wait 1t
       - announce to_console format:dCommander_Format "dCommander successfully loaded."
     on shutdown:
       - if <yaml.list.contains[dCommander_Config]> {
         - yaml savefile:/dCommander/config.yml id:dCommander_Config
       }
+      - if <yaml.list.contains[dCommander_Warps]> {
+        - yaml savefile:/dCommander/warps.yml id:dCommander_Warps
       }
 
   initialise_config:
     - yaml create id:dCommander_Config
     - yaml set colors.primary:&f id:dCommander_Config
     - yaml set colors.secondary:&6 id:dCommander_Config
+    - yaml set "warps.per warp permissions:true" id:dCommander_Config
+    - yaml set warps.delay.enabled:false id:dCommander_Config
+    - yaml set warps.delay.amount:3 id:dCommander_Config
     - yaml savefile:/dCommander/config.yml id:dCommander_Config
     - announce to_console format:dCommander_Format "Generated new configuration."
 

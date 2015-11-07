@@ -1,10 +1,12 @@
 dCommander_Initialise_Warps:
   type: world
+  debug: false
   events:
     on server start:
     - while <yaml.list.contains[dCommander_Config].not> {
       - wait 1t
     }
+    - wait 5t
     - if <server.has_file[/dCommander/warps.yml].not> {
       - yaml create id:dCommander_Warps
       - yaml savefile:/dCommander/warps.yml id:dCommander_Warps

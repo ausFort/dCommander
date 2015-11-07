@@ -29,8 +29,6 @@ dCommander_Command_Heal:
     }
     - narrate format:dCommander_Format "<proc[dCPS]><def[Target].name><proc[dCPP]> has been healed."
     - narrate format:dCommander_Format "<proc[dCPS]><player.name||console><proc[dCPP]> has healed you." targets:<def[Target]>
-    - default:
-      - narrate format:dCommander_Format "Usage: /heal (player)"
 
 dCommander_Command_Feed:
   type: command
@@ -63,8 +61,6 @@ dCommander_Command_Feed:
     }
     - narrate format:dCommander_Format "<proc[dCPS]><def[Target].name><proc[dCPP]> has been fed."
     - narrate format:dCommander_Format "<proc[dCPS]><player.name||console><proc[dCPP]> has fed you." targets:<def[Target]>
-    - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> /feed (player)"
 
 dCommander_Command_Gamemode:
   type: command

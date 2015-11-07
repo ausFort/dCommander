@@ -12,7 +12,6 @@ dCommander_Initialise_Main:
     - announce to_console format:dCommander_Format "Generated new configuration."
   events:
     on server start:
-      - wait 3s
       - if <server.has_file[/dCommander/config.yml].not> {
         - inject locally initialise_config
       }
@@ -20,18 +19,16 @@ dCommander_Initialise_Main:
         - yaml load:/dCommander/config.yml fix_formatting id:dCommander_Config
       }
       - run s@dCommander_Players_Save delay:1m instantly
-      - wait 1t
+      - wait 3s
       - announce to_console format:dCommander_Format "dCommander successfully loaded."
     on shutdown:
       - if <yaml.list.contains[dCommander_Config]> {
         - yaml savefile:/dCommander/config.yml id:dCommander_Config
       }
-      - if <yaml.list.contains[dCommander_Warps]> {
-        - yaml savefile:/dCommander/warps.yml id:dCommander_Warps
-      }
 
 dCommander_Initialise_Players:
   type: world
+  debug: false
   events:
     on player join:
     - if <server.has_file[/dCommander/saves/<player.uuid>.yml].not> {
@@ -40,10 +37,12 @@ dCommander_Initialise_Players:
     else {
       - yaml load:/dCommander/saves/<player.uuid>.yml id:dCommander_<player.uuid>
     }
+    - announce to_console format:dCommander_Format "Loaded save file for <proc[dCPS]><player.uuid><proc[dCPP]>."
     on player quit:
     - if <yaml.list.contains[dCommander_<player.uuid>]> {
       - yaml savefile:/dCommander/saves/<player.uuid>.yml id:dCommander_<player.uuid>
       - yaml unload id:dCommander_<player.uuid>
+      - announce to_console format:dCommander_Format "Unloaded save file for <proc[dCPS]><player.uuid><proc[dCPP]>."
     }
 
 dCommander_Players_Save:
@@ -60,18 +59,36 @@ dCommander_Players_Save:
 
 dCSaves_Get:
   type: procedure
-  definitions: uuid|key
+  debug: false
+  definitions: UUID|Key
   script:
-  - if <def[UUID].is_player||false> {
-    - define UUID <def[UUID].uuid>
-  }
-  - if <yaml.list.contains[dCommander_<def[UUID]>]> {
-    - if <yaml[dCommander_<def[UUID]>].contains[<def[Key]>]> {
-      - determine <yaml[dCommander_<def[UUID]>].read[<def[Key]>]
+  - if <def[uuid].exists> && <def[key].exists> {
+    - if <def[UUID].is_player||false> {
+      - define UUID <def[UUID].uuid>
     }
-    - determine "Key not found."
+    - if <yaml.list.contains[dCommander_<def[UUID]>]> {
+      - if <yaml[dCommander_<def[UUID]>].contains[<def[Key]>]> {
+        - determine <yaml[dCommander_<def[UUID]>].read[<def[Key]>]
+      }
+      - determine "nf"
+    }
   }
-  - determine "Player save not loaded."
+  - determine "nl"
+
+dCSaves_Set:
+  type: task
+  debug: false
+  definitions: UUID|Key|Value
+  speed: 0
+  script:
+  - if <def[uuid].exists> && <def[key].exists> && <def[Value].exists> {
+    - if <def[UUID].is_player||false> {
+      - define UUID <def[UUID].uuid>
+    }
+    - if <yaml.list.contains[dCommander_<def[UUID]>]> {
+      - yaml set <def[Key]>:<def[Value]> id:dCommander_<def[UUID]>
+    }
+  }
 
 dCommander_Format:
   type: format

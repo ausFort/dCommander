@@ -8,6 +8,8 @@ dCommander_Initialise_Main:
     - yaml set "warps.per warp permissions:true" id:dCommander_Config
     - yaml set warps.delay.enabled:false id:dCommander_Config
     - yaml set warps.delay.amount:3 id:dCommander_Config
+    - yaml set homes.limit.default:1 id:dCommander_Config
+    - yaml set homes.limit.premium:3 id:dCommander_Config
     - yaml savefile:/dCommander/config.yml id:dCommander_Config
     - announce to_console format:dCommander_Format "Generated new configuration."
   events:
@@ -75,20 +77,6 @@ dCSaves_Get:
   }
   - determine "nl"
 
-dCSaves_Set:
-  type: task
-  debug: false
-  definitions: UUID|Key|Value
-  speed: 0
-  script:
-  - if <def[uuid].exists> && <def[key].exists> && <def[Value].exists> {
-    - if <def[UUID].is_player||false> {
-      - define UUID <def[UUID].uuid>
-    }
-    - if <yaml.list.contains[dCommander_<def[UUID]>]> {
-      - yaml set <def[Key]>:<def[Value]> id:dCommander_<def[UUID]>
-    }
-  }
 
 dCommander_Format:
   type: format

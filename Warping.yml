@@ -1,12 +1,35 @@
+dCommander_Initialise_Warps:
+  type: world
+  events:
+    on server start:
+    - while <yaml.list.contains[dCommander_Config].not> {
+      - wait 1t
+    }
+    - if <server.has_file[/dCommander/warps.yml].not> {
+      - yaml create id:dCommander_Warps
+      - yaml savefile:/dCommander/warps.yml id:dCommander_Warps
+      - announce to_console format:dCommander_Format "Generated warps file."
+    }
+    else {
+      - yaml load:/dCommander/warps.yml fix_formatting id:dCommander_Warps
+      - announce to_console format:dCommander_Format "Loaded warps file."
+    }
+    - run s@dCommander_Warps_Save delay:30s
+    on shutdown:
+    - if <yaml.list.contains[dCommander_Warps]> {
+      - yaml savefile:/dCommander/warps.yml id:dCommander_Warps
+    }
+
 dCommander_Warps_Save:
   type: task
   debug: false
+  speed: 0
   script:
   - if <yaml.list.contains[dCommander_Warps].not> {
     - queue clear
   }
   - yaml savefile:/dCommander/warps.yml id:dCommander_Warps
-  - run s@dCommander_Warps_Save delay:30s instantly
+  - run <script> delay:30s
 
 dCommander_Warps_Location:
   type: procedure

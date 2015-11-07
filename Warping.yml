@@ -22,53 +22,6 @@ dCommander_Initialise_Warps:
       - yaml savefile:/dCommander/warps.yml id:dCommander_Warps
     }
 
-dCommander_Warps_Save:
-  type: task
-  debug: false
-  speed: 0
-  script:
-  - if <yaml.list.contains[dCommander_Warps].not> {
-    - queue clear
-  }
-  - yaml savefile:/dCommander/warps.yml id:dCommander_Warps
-  - run <script> delay:30s
-
-dCommander_Warps_Location:
-  type: procedure
-  debug: false
-  definitions: WarpName
-  script:
-  - if <yaml[dCommander_Warps].contains[<def[WarpName]>]> {
-    - determine <yaml[dCommander_Warps].read[<def[WarpName]>.location]>
-  }
-  - determine "Unknown Location"
-
-dCommander_Warps_Set:
-  type: task
-  debug: false
-  definitions: Name|Location|Creator
-  script:
-  - yaml set <def[Name]>.location:<def[Location]> id:dCommander_Warps
-  - if <def[Creator].exists> {
-    - yaml set <def[Name]>.creator:<def[Creator]> id:dCommander_Warps
-  }
-
-dCommander_Warps_Get:
-  type: procedure
-  debug: false
-  definitions: All
-  script:
-  - if <def[All]||false> || "<yaml[dCommander_Config].read[warps.per warp permissions].not||true>" {
-    - determine <yaml[dCommander_Warps].list_keys[].parse[to_titlecase]>
-  }
-  - define Warps li@
-  - foreach <yaml[dCommander_Warps].list_keys[]> {
-    - if <player.has_permission[dcommander.command.warp.<def[Value]>]> {
-      - define Warps <def[Warps].include[<def[Value].to_titlecase>]>
-    }
-  }
-  - determine <def[Warps]>
-
 dCommander_Command_SetWarp:
   type: command
   debug: false
@@ -166,3 +119,50 @@ dCommander_Command_Warp:
       - narrate format:dCommander_Format "You have been warped to <proc[dCPS]><def[Target].to_titlecase><proc[dCPP]>."
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
+
+dCommander_Warps_Save:
+  type: task
+  debug: false
+  speed: 0
+  script:
+  - if <yaml.list.contains[dCommander_Warps].not> {
+    - queue clear
+  }
+  - yaml savefile:/dCommander/warps.yml id:dCommander_Warps
+  - run <script> delay:30s
+
+dCommander_Warps_Location:
+  type: procedure
+  debug: false
+  definitions: WarpName
+  script:
+  - if <yaml[dCommander_Warps].contains[<def[WarpName]>]> {
+    - determine <yaml[dCommander_Warps].read[<def[WarpName]>.location]>
+  }
+  - determine "Unknown Location"
+
+dCommander_Warps_Set:
+  type: task
+  debug: false
+  definitions: Name|Location|Creator
+  script:
+  - yaml set <def[Name]>.location:<def[Location]> id:dCommander_Warps
+  - if <def[Creator].exists> {
+    - yaml set <def[Name]>.creator:<def[Creator]> id:dCommander_Warps
+  }
+
+dCommander_Warps_Get:
+  type: procedure
+  debug: false
+  definitions: All
+  script:
+  - if <def[All]||false> || "<yaml[dCommander_Config].read[warps.per warp permissions].not||true>" {
+    - determine <yaml[dCommander_Warps].list_keys[].parse[to_titlecase]>
+  }
+  - define Warps li@
+  - foreach <yaml[dCommander_Warps].list_keys[]> {
+    - if <player.has_permission[dcommander.command.warp.<def[Value]>]> {
+      - define Warps <def[Warps].include[<def[Value].to_titlecase>]>
+    }
+  }
+  - determine <def[Warps]>

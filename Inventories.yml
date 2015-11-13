@@ -1,0 +1,51 @@
+dCommand_Command_InventorySee:
+  type: command
+  debug: false
+  name: inventorysee
+  aliases:
+  - invsee
+  - checkinventory
+  usage: /inventorysee <&lt>player<&gt>
+  allowed help:
+  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  description: See another player's inventory.
+  permission: dcommander.command.inventorysee
+  script:
+  - inject s@dCommander_Require_Ingame_Handler
+  - choose <context.args.size>:
+    - case 1:
+      - define Target <server.match_offline_player[<context.args.get[1]>]||null>
+      - if <def[Target]> == null {
+        - narrate format:dCommander_Format "No player can be found by that name!"
+        - queue clear
+      }
+      - narrate format:dCommander_Format "Opening inventory of <proc[dCPS]><def[Target].name><proc[dCPP]>."
+      - inventory open d:<def[Target].inventory>
+    - default:
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
+
+dCommander_Command_EnderSee:
+  type: command
+  debug: false
+  name: endersee
+  aliases:
+  - endsee
+  - enderchestsee
+  usage: /endersee <&lt>player<&gt>
+  allowed help:
+  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  description: See a player's ender chest.
+  permission: dcommander.command.endersee
+  script:
+  - inject s@dCommander_Require_Ingame_Handler
+  - choose <context.args.size>:
+    - case 1:
+      - define Target <server.match_offline_player[<context.args.get[1]>]||null>
+      - if <def[Target]> == null {
+        - narrate format:dCommander_Format "No player can be found by that name!"
+        - queue clear
+      }
+      - narrate format:dCommander_Format "Opening enderchest of <proc[dCPS]><def[Target].name><proc[dCPP]>."
+      - inventory open d:<def[Target].enderchest>
+    - default:
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"

@@ -26,7 +26,7 @@ dcommander_Command_SetHome:
       - yaml set homes.<def[Name]>:<player.location.block> id:dCommander_<player.uuid>
       - narrate format:dCommander_Format "New home <proc[dCPS]><def[Name].to_titlecase><proc[dCPP]> set at <proc[dCPS]><player.location.block.simple><proc[dCPP]>."
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
 
 dCommander_Command_DeleteHome:
   type: command
@@ -58,7 +58,7 @@ dCommander_Command_DeleteHome:
       - narrate format:dCommander_Format "Removed home <proc[dCPS]><def[Name]><proc[dCPP]> from location <proc[dCPS]><proc[dCommander_Homes_Location].context[<player.uuid>|<def[Name]>].simple><proc[dCPP]>."
       - yaml set homes.<def[Name]>:! id:dCommander_<player.uuid>
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
 
 dcommander_Command_Home:
   type: command
@@ -97,7 +97,7 @@ dcommander_Command_Home:
       - teleport <player> <proc[dCommander_Homes_Location].context[<player.uuid>|<def[Name]>]>
       - narrate format:dCommander_Format "You've been teleported to your home <proc[dCPS]><def[Name].to_titlecase><proc[dCPP]>."
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
 
 dCommander_Homes_Location:
   type: procedure

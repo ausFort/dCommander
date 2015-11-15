@@ -46,7 +46,7 @@ dCommander_Command_SetWarp:
       - run s@dCommander_Warps_Set def:<def[Name]>|<player.location.block>|<player> instantly
       - narrate format:dCommander_Format "Warp <proc[dCPS]><def[Name]><proc[dCPP]> created at <proc[dCPS]><player.location.block.simple><proc[dCPP]>"
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
 
 dCommander_Command_DeleteWarp:
   type: command
@@ -78,7 +78,7 @@ dCommander_Command_DeleteWarp:
       - narrate format:dCommander_Format "Removed warp <proc[dCPS]><def[Name]><proc[dCPP]> from location <proc[dCPS]><proc[dCommander_Warps_Location].context[<def[Name]>].simple><proc[dCPP]>."
       - yaml set <def[Name]>:! id:dCommander_Warps
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
 
 dCommander_Command_Warp:
   type: command
@@ -118,7 +118,7 @@ dCommander_Command_Warp:
       - teleport <player> <proc[dCommander_Warps_Location].context[<def[Target]>]>
       - narrate format:dCommander_Format "You have been warped to <proc[dCPS]><def[Target].to_titlecase><proc[dCPP]>."
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
 
 dCommander_Warps_Save:
   type: task

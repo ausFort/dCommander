@@ -33,7 +33,7 @@ dCommander_Command_Spawn:
         - queue clear
       }
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
       - queue clear
 
   - teleport <def[Target]> <def[Target].world.spawn_location>
@@ -78,7 +78,7 @@ dCommander_Command_Teleport:
         - queue clear
       }
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
       - queue clear
 
   - if <def[Target]> == <def[Destination]> {
@@ -122,4 +122,4 @@ dCommander_Command_Teleport_Here:
       - narrate format:dCommander_Format "<proc[dCPS]><def[Target].name><proc[dCPP]> has been teleported to you!"
       - narrate format:dCommander_Format "<proc[dCPS]><player.name><proc[dCPP]> teleported you to them!" targets:<def[Target]>
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"

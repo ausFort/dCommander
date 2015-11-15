@@ -19,7 +19,7 @@ dCommander_Command_Heal:
         - queue clear
       }
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
       - queue clear
 
     - heal <def[Target]>
@@ -51,7 +51,7 @@ dCommander_Command_Feed:
         - queue clear
       }
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
       - queue clear
 
     - feed <def[Target]>
@@ -96,7 +96,7 @@ dCommander_Command_Gamemode:
         - queue clear
       }
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
       - queue clear
 
   - define Mode <def[Valid].filter[starts_with[<context.args.get[1]>]].get[1]||null>
@@ -163,7 +163,7 @@ dCommander_Command_Fly:
         - queue clear
       }
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage]>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
       - queue clear
 
   - choose <def[Mode]>:

@@ -12,11 +12,11 @@ dCommander_Initialise_Main:
     - yaml set homes.limit.premium:3 id:dCommander_Config
     - yaml set "give.per item permissions:false" id:dCommander_Config
     - yaml savefile:/dCommander/config.yml id:dCommander_Config
-    - announce to_console format:dCommander_Format "Generated new configuration."
   events:
     on server start:
       - if <server.has_file[/dCommander/config.yml].not> {
         - inject locally initialise_config
+        - announce to_console format:dCommander_Format "Generated new configuration."
       }
       else {
         - yaml load:/dCommander/config.yml fix_formatting id:dCommander_Config
@@ -77,6 +77,51 @@ dCSaves_Get:
     }
   }
   - determine "nl"
+
+dCommander_Command_dCommander:
+  type: command
+  debug: false
+  name: dcommander
+  aliases:
+  - dc
+  - dcomm
+  usage: /dCommander
+  allowed help:
+  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  description: dCommander
+  script:
+  - choose <context.args.get[1]||help>:
+    ## Reload ##
+    - case reload:
+      - if <player.has_permission[dcommander.command.reload]||<context.server>> {
+        - if <server.has_file[/dCommander/config.yml].not> {
+          - inject s@dCommander_Initialise_Main path:initialise_config
+          - narrate format:dCommander_Format "Config not found, regenerating!"
+        }
+        else {
+          - yaml load:/dCommander/config.yml id:dCommander_Config
+        }
+        - narrate format:dCommander_Format "Reloaded dCommander!"
+        - queue clear
+      }
+      - narrate format:dCommander_Format "Usage: <proc[dCPS]>/dCommander <&lt>info<&gt>"
+
+    ## Information ##
+    - case info:
+      - narrate format:dCommander_Format "dCommander Version <proc[dCPS]>0.7<proc[dCPP]>. Made by <proc[dCPS]>Fortifier<proc[dCPP]>."
+
+    ## Help ##
+    - default:
+      - if <player.has_permission[dcommander.command.reload]||<context.server>> {
+        - narrate format:dCommander_Format "Usage: <proc[dCPS]>/dCommander <&lt>info/reload<&gt>"
+      }
+      else {
+        - narrate format:dCommander_Format "Usage: <proc[dCPS]>/dCommander <&lt>info<&gt>"
+      }
+
+
+
+
 
 
 dCommander_Format:

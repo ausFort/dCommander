@@ -2,6 +2,8 @@ dCommander_Command_Item:
   type: command
   debug: true
   name: item
+  aliases:
+  - i
   usage: /item <&lt>item<&gt> (quantity)
   allowed help:
   - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>

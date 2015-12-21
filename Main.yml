@@ -119,11 +119,6 @@ dCommander_Command_dCommander:
         - narrate format:dCommander_Format "Usage: <proc[dCPS]>/dCommander <&lt>info<&gt>"
       }
 
-
-
-
-
-
 dCommander_Format:
   type: format
   debug: false
@@ -132,9 +127,8 @@ dCommander_Format:
 dPC:
   type: procedure
   debug: false
-  definitions: M
   script:
-  - determine <def[M].parse_color>
+  - determine <def[1].parse_color>
 
 dCPP:
   type: procedure
@@ -147,6 +141,34 @@ dCPS:
   debug: false
   script:
   - determine <yaml[dCommander_Config].read[Colors.Secondary]>
+
+dCFL:
+  type: procedure
+  debug: false
+  definitions: dLoc|Simple|Colored|With_World
+  script:
+  - if <li@true|false.contains[<def[Colored]||null>].not> {
+    - define Colored false
+  }
+  - if <li@true|false.contains[<def[With_World]||null>].not> {
+    - define With_World true
+  }
+  - if <def[Simple]> {
+    - define X "<t[<def[Colored]>]:<proc[dCPS]><def[dLoc].x.round><proc[dCPP]>||<def[dLoc].x.round>>"
+    - define Y "<t[<def[Colored]>]:<proc[dCPS]><def[dLoc].y.round><proc[dCPP]>||<def[dLoc].y.round>>"
+    - define Z "<t[<def[Colored]>]:<proc[dCPS]><def[dLoc].z.round><proc[dCPP]>||<def[dLoc].z.round>>"
+  }
+  else {
+    - define X "<t[<def[Colored]>]:<proc[dCPS]><def[dLoc].x><proc[dCPP]>||<def[dLoc].x>>"
+    - define Y "<t[<def[Colored]>]:<proc[dCPS]><def[dLoc].y><proc[dCPP]>||<def[dLoc].y>>"
+    - define Z "<t[<def[Colored]>]:<proc[dCPS]><def[dLoc].z><proc[dCPP]>||<def[dLoc].z>>"
+  }
+  - define World ""
+  - if <def[With_World]> {
+    - define World ", <t[<def[Colored]>]:<proc[dCPS]><def[dLoc].world.name>||<def[dLoc].world.name>>"
+  }
+  - define dLoc "<def[X]>, <def[Y]>, <def[Z]><def[World]><&r>"
+  - determine <def[dLoc].parse_color>
 
 dCommander_Require_Ingame_Handler:
   type: task

@@ -22,7 +22,7 @@ dCommand_Command_InventorySee:
       - narrate format:dCommander_Format "Opening inventory of <proc[dCPS]><def[Target].name><proc[dCPP]>."
       - inventory open d:<def[Target].inventory>
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
 
 dCommander_Command_EnderSee:
   type: command
@@ -48,4 +48,4 @@ dCommander_Command_EnderSee:
       - narrate format:dCommander_Format "Opening enderchest of <proc[dCPS]><def[Target].name><proc[dCPP]>."
       - inventory open d:<def[Target].enderchest>
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"

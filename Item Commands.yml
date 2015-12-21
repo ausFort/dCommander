@@ -13,7 +13,7 @@ dCommander_Command_Item:
   - inject s@dCommander_Require_Ingame_Handler
   - choose <context.args.size>:
     - case 0:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
       - queue clear
     - default:
       - define Item <context.args.get[1].as_item||null>
@@ -79,7 +79,7 @@ dCommander_Command_Enchant:
   script:
   - choose <context.args.size>:
     - case 0:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
 
     - default:
       - if <context.args.get[1]> == list {

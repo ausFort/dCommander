@@ -33,7 +33,7 @@ dCommander_Command_Spawn:
         - queue clear
       }
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
       - queue clear
 
   - teleport <def[Target]> <def[Target].world.spawn_location>
@@ -78,7 +78,7 @@ dCommander_Command_Teleport:
         - queue clear
       }
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
       - queue clear
 
   - if <def[Target]> == <def[Destination]> {
@@ -86,8 +86,10 @@ dCommander_Command_Teleport:
     - queue clear
   }
   - teleport <def[Target]> <def[Destination].location>
-  - narrate format:dCommander_Format "You have been teleported to <proc[dCPS]><def[Destination].name><proc[dCPP]>." targets:<def[Target]>
-  - if <def[Target]> != <player> {
+  - if <def[Target]> == <player> {
+    - narrate format:dCommander_Format "You have been teleported to <proc[dCPS]><def[Destination].name><proc[dCPP]>." targets:<def[Target]>
+  }
+  else {
     - narrate format:dCommander_Format "<proc[dCPS]><def[Target].name><proc[dCPP]> was teleported to <proc[dCPS]><def[Destination].name><proc[dCPP]>."
   }
 
@@ -100,6 +102,8 @@ dCommander_Command_Teleport_Here:
   - heretp
   - telehere
   - porthere
+  - bring
+  - bringhere
   usage: /teleporthere <&lt>player<&gt>
   allowed help:
   - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
@@ -122,4 +126,46 @@ dCommander_Command_Teleport_Here:
       - narrate format:dCommander_Format "<proc[dCPS]><def[Target].name><proc[dCPP]> has been teleported to you!"
       - narrate format:dCommander_Format "<proc[dCPS]><player.name><proc[dCPP]> teleported you to them!" targets:<def[Target]>
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage]>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+
+dCommander_Command_Teleport_pos:
+  type: command
+  debug: false
+  name: teleportpos
+  aliases:
+  - tppos
+  - gotopos
+  usage: /teleportpos <&lt>x<&gt> <&lt>z<&gt> <&lt>z<&gt>
+  allowed help:
+  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  description: Teleport yourself to a set of coordinates.
+  permission: dcommander.command.teleportpos
+  script:
+  - inject s@dCommander_Require_Ingame_Handler
+  - choose <context.args.size>:
+    - case 3:
+      - define Error false
+      - if <context.args.get[1].is[matches].to[number].not> {
+        - narrate format:dCommander_Format "Your <&6>X<&f> coordinate is not a number!"
+        - define Error true
+      }
+      - if <context.args.get[2].is[matches].to[number].not> {
+        - narrate format:dCommander_Format "Your <&6>Z<&f> coordinate is not a number!"
+        - define Error true
+      }
+      else if <context.args.get[2]> > 256 || <context.args.get[2]> < 0 {
+        - narrate format:dCommander_Format "Y coordinate values must be between 0 and 256."
+        - define Error true
+      }
+      - if <context.args.get[3].is[matches].to[number].not> {
+        - narrate format:dCommander_Format "Your <&6>Y<&f> coordinate is not a number!"
+        - define Error true
+      }
+      - if <def[Error]> {
+        - queue clear
+      }
+      - define Location <location[<context.args.get[1]>,<context.args.get[2]>,<context.args.get[3]>,<player.world.name>]>
+      - teleport <player> <def[Location]>
+      - narrate format:dCommander_Format "You have been teleported to <proc[dCFL].context[<def[Location]>|false|true|false]>"
+    - default:
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"

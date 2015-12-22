@@ -47,16 +47,14 @@ dCommander_Initialise_Players:
     else if <yaml.list.contains[dCommander_<player.uuid>].not> {
       - yaml load:/dCommander/saves/<player.uuid>.yml id:dCommander_<player.uuid>
     }
-
-  seen_join:
-  - define IP <player.ip.address.after[/].before[:]>
-  - if <yaml[dCommander_<player.uuid>].read[seen.ips].contains[<def[IP]>].not||true> {
-    - yaml set seen.ips:->:<def[IP]>
-  }
-  - define Name <player.name>
-  - if <yaml[dCommander_<player.uuid>].read[seen.names].contains[<def[Name]>].not||true> {
-    - yaml set seen.names:->:<def[Name]>
-  }
+    - define IP <player.ip.address.after[/].before[:]>
+    - if <yaml[dCommander_<player.uuid>].read[seen.ips].contains[<def[IP]>].not||true> {
+      - yaml set seen.ips:->:<def[IP]> id:dCommander_<player.uuid>
+    }
+    - define Name <player.name>
+    - if <yaml[dCommander_<player.uuid>].read[seen.names].contains[<def[Name]>].not||true> {
+      - yaml set seen.names:->:<def[Name]> id:dCommander_<player.uuid>
+    }
 
 dCommander_Players_Save:
   type: task
@@ -75,6 +73,7 @@ dCommander_Players_Save:
 
 dCommander_Warps_Save:
   type: task
+  debug: false
   script:
   - if <server.has_file[/dCommander/warps.yml].not> {
     - yaml create id:dCommander_Warps
@@ -132,6 +131,11 @@ dCommander_Format:
   type: format
   debug: false
   format: <proc[dPC].context[&7[<proc[dCPS]>dCommander&7]<proc[dCPP]> <text>]>
+
+dCommander_Col_Format:
+  type: format
+  debug: false
+  format: <proc[dPC].context[<text>]>
 
 dPC:
   type: procedure

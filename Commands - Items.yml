@@ -21,7 +21,7 @@ dCommander_Command_Item:
         - narrate format:dCommander_Format "Sorry, that item cannot be found!"
         - queue clear
       }
-      - if <yaml[dCommander_Config].read[give.per item permissions]> {
+      - if <yaml[dCommander_Config].read[give.per_item_permissions]> && <player.has_permission[dcommander.command.item.unrestricted].not> {
         - if <player.has_permission[dCommander.command.item.<def[Item].scriptname||<def[Item].material>>].not> {
           - narrate format:dCommander_Format "You don't have permission to give this item!"
           - queue clear

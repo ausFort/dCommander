@@ -1,17 +1,6 @@
 dCommander_Initialise_Main:
   type: world
   debug: false
-  initialise_config:
-    - yaml create id:dCommander_Config
-    - yaml set colors.primary:&f id:dCommander_Config
-    - yaml set colors.secondary:&6 id:dCommander_Config
-    - yaml set "warps.per warp permissions:true" id:dCommander_Config
-    - yaml set warps.delay.enabled:false id:dCommander_Config
-    - yaml set warps.delay.amount:3 id:dCommander_Config
-    - yaml set homes.limit.default:1 id:dCommander_Config
-    - yaml set homes.limit.premium:3 id:dCommander_Config
-    - yaml set "give.per item permissions:false" id:dCommander_Config
-    - yaml savefile:/dCommander/config.yml id:dCommander_Config
   events:
     on server start:
       - if <server.has_file[/dCommander/config.yml].not> {
@@ -23,11 +12,42 @@ dCommander_Initialise_Main:
       }
       - run s@dCommander_Players_Save delay:1m instantly
       - wait 3s
+      - if <server.list_scripts.parse.name.contains[dCommander_Command_Warp]> {
+        - inject locally initialise_warps
+      }
       - announce to_console format:dCommander_Format "dCommander successfully loaded."
     on shutdown:
       - if <yaml.list.contains[dCommander_Config]> {
         - yaml savefile:/dCommander/config.yml id:dCommander_Config
       }
+      - if <yaml.list.contains[dCommander_Warps]> {
+        - yaml savefile:/dCommander/warps.yml id:dCommander_Warps
+      }
+
+  initialise_config:
+  - yaml create id:dCommander_Config
+  - yaml set colors.primary:&f id:dCommander_Config
+  - yaml set colors.secondary:&6 id:dCommander_Config
+  - yaml set "warps.per_warp_permissions:true" id:dCommander_Config
+  - yaml set warps.delay.enabled:false id:dCommander_Config
+  - yaml set warps.delay.amount:3 id:dCommander_Config
+  - yaml set homes.limit.default:1 id:dCommander_Config
+  - yaml set homes.limit.premium:3 id:dCommander_Config
+  - yaml set "give.per_item_permissions:false" id:dCommander_Config
+  - yaml set ""
+  - yaml savefile:/dCommander/config.yml id:dCommander_Config
+
+  initialise_warps:
+  - if <server.has_file[/dCommander/warps.yml].not> {
+    - yaml create id:dCommander_Warps
+    - yaml savefile:/dCommander/warps.yml id:dCommander_Warps
+    - announce to_console format:dCommander_Format "Generated warps file."
+  }
+  else {
+    - yaml load:/dCommander/warps.yml fix_formatting id:dCommander_Warps
+    - announce to_console format:dCommander_Format "Loaded warps file."
+  }
+  - run s@dCommander_Warps_Save delay:30s
 
 dCommander_Initialise_Players:
   type: world
@@ -47,6 +67,22 @@ dCommander_Initialise_Players:
       - yaml unload id:dCommander_<player.uuid>
       - announce to_console format:dCommander_Format "Unloaded save file for <proc[dCPS]><player.uuid><proc[dCPP]>."
     }
+
+  seen_join:
+  - define IP <player.ip.address.after[/].before[:]>
+  - if <yaml[dCommander_<player.uuid>].read[seen.ips].contains[<def[IP]>].not||true> {
+    - yaml set seen.ips:->:<def[IP]>
+  }
+  - define Name <player.name>
+  - if <yaml[dCommander_<player.uuid>].read[seen.names].contains[<def[Name]>].not||true> {
+    - yaml set seen.names:->:<def[Name]>
+  }
+
+  seen_quit:
+  - yaml set seen.location:<player.location>
+  - yaml set seen.time:<util.date.time.duration>
+
+
 
 dCommander_Players_Save:
   type: task

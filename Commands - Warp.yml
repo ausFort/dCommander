@@ -1,27 +1,3 @@
-dCommander_Initialise_Warps:
-  type: world
-  debug: false
-  events:
-    on server start:
-    - while <yaml.list.contains[dCommander_Config].not> {
-      - wait 1t
-    }
-    - wait 5t
-    - if <server.has_file[/dCommander/warps.yml].not> {
-      - yaml create id:dCommander_Warps
-      - yaml savefile:/dCommander/warps.yml id:dCommander_Warps
-      - announce to_console format:dCommander_Format "Generated warps file."
-    }
-    else {
-      - yaml load:/dCommander/warps.yml fix_formatting id:dCommander_Warps
-      - announce to_console format:dCommander_Format "Loaded warps file."
-    }
-    - run s@dCommander_Warps_Save delay:30s
-    on shutdown:
-    - if <yaml.list.contains[dCommander_Warps]> {
-      - yaml savefile:/dCommander/warps.yml id:dCommander_Warps
-    }
-
 dCommander_Command_SetWarp:
   type: command
   debug: false
@@ -156,7 +132,7 @@ dCommander_Warps_Get:
   debug: false
   definitions: All
   script:
-  - if <def[All]||false> || "<yaml[dCommander_Config].read[warps.per warp permissions].not||true>" {
+  - if <def[All]||false> || "<yaml[dCommander_Config].read[warps.per_warp_permissions].not||true>" {
     - determine <yaml[dCommander_Warps].list_keys[].parse[to_titlecase]>
   }
   - define Warps li@

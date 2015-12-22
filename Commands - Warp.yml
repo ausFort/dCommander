@@ -17,10 +17,10 @@ dCommander_Command_SetWarp:
         - queue clear
       }
       - if <yaml[dCommander_Warps].contains[<def[Name]>]> {
-        - narrate format:dCommander_Format "Overwriting existing warp <proc[dCPS]><proc[dCommander_Warps_Location].context[<def[Name]>].simple><proc[dCPP]>."
+        - narrate format:dCommander_Format "Overwriting existing warp at <proc[dCFL].context[<proc[dCommander_Warps_Location].context[<def[Name]>]>|true|true|true]><proc[dCPP]>."
       }
       - run s@dCommander_Warps_Set def:<def[Name]>|<player.location.block>|<player> instantly
-      - narrate format:dCommander_Format "Warp <proc[dCPS]><def[Name]><proc[dCPP]> created at <proc[dCPS]><player.location.block.simple><proc[dCPP]>"
+      - narrate format:dCommander_Format "Warp <proc[dCPS]><def[Name]><proc[dCPP]> created at <proc[dCFL].context[<proc[dCommander_Warps_Location].context[<def[Name]>]>|true|true|true]><proc[dCPP]>."
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
 
@@ -51,7 +51,7 @@ dCommander_Command_DeleteWarp:
         - narrate format:dCommander_Format "No warp exists with the given name."
         - queue clear
       }
-      - narrate format:dCommander_Format "Removed warp <proc[dCPS]><def[Name]><proc[dCPP]> from location <proc[dCPS]><proc[dCommander_Warps_Location].context[<def[Name]>].simple><proc[dCPP]>."
+      - narrate format:dCommander_Format "Removed warp <proc[dCPS]><def[Name]><proc[dCPP]> from <proc[dCFL].context[<proc[dCommander_Warps_Location].context[<def[Name]>]>|true|true|true]><proc[dCPP]>."
       - yaml set <def[Name]>:! id:dCommander_Warps
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
@@ -91,21 +91,23 @@ dCommander_Command_Warp:
         - narrate format:dCommander_Format "No warp exists with the given name or you do not have permission for that warp."
         - queue clear
       }
+      - if <yaml[dCommander_Config].read[warps.delay.enabled]||false> {
+        - define Delay <yaml[dCommander_Config].read[warps.delay.amount].as_int||3>
+        - define Location <player.location.block>
+        - narrate format:dCommander_Format "Moving will cancel your warp."
+        - while <def[Delay]> > 0 {
+          - if <player.location.block> != <def[Location]> {
+            - narrate format:dCommander_Format "Warping has been cancelled as you have moved!"
+            - queue clear
+          }
+          - narrate format:dCommander_Format "You will be warped in <proc[dCPS]><def[Delay]><proc[dCPP]> seconds."
+          - wait 1s
+        }
+      }
       - teleport <player> <proc[dCommander_Warps_Location].context[<def[Target]>]>
       - narrate format:dCommander_Format "You have been warped to <proc[dCPS]><def[Target].to_titlecase><proc[dCPP]>."
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
-
-dCommander_Warps_Save:
-  type: task
-  debug: false
-  speed: 0
-  script:
-  - if <yaml.list.contains[dCommander_Warps].not> {
-    - queue clear
-  }
-  - yaml savefile:/dCommander/warps.yml id:dCommander_Warps
-  - run <script> delay:30s
 
 dCommander_Warps_Location:
   type: procedure

@@ -41,6 +41,7 @@ dCommander_Initialise_Players:
   debug: false
   events:
     on player join:
+    - flag <player> dCommander_Back
     - if <server.has_file[/dCommander/saves/<player.uuid>.yml].not> {
       - yaml create id:dCommander_<player.uuid>
     }
@@ -58,13 +59,13 @@ dCommander_Initialise_Players:
 
 dCommander_Players_Save:
   type: task
-  debug: false
+  debug: true
   script:
   - foreach <server.list_players> {
-    - if <server.has_file[/dCommander/saves/<def[Value].uuid>].not> {
+    - if <server.has_file[/dCommander/saves/<def[Value].uuid>.yml].not> {
       - yaml create id:dCommander_<def[Value].uuid>
     }
-    else if <yaml.list.contains[dcommander_<def[Value].uuid>].not> {
+    else if <yaml.list.contains[dCommander_<def[Value].uuid>].not> {
       - yaml load:/dCommander/saves/<def[Value].uuid>.yml id:dCommander_<def[Value].uuid>
     }
     - yaml savefile:/dCommander/saves/<def[Value].uuid>.yml id:dCommander_<def[Value].uuid>
@@ -84,7 +85,7 @@ dCommander_Warps_Save:
     - yaml load:/dCommander/warps.yml fix_formatting id:dCommander_Warps
     - announce to_console format:dCommander_Format "Loaded warps file."
   }
-  - run <script> delay:15s
+  - run <script> delay:15s instantly
 
 dCommander_Command_dCommander:
   type: command

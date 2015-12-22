@@ -1,6 +1,6 @@
 dCommander_Command_Back:
   type: command
-  debug: true
+  debug: false
   name: back
   aliases:
   - tpback
@@ -29,6 +29,7 @@ dCommander_Command_Back:
 
 dCommander_Back_Saves:
   type: world
+  debug: false
   events:
     on player teleports:
     - if <player.has_flag[dCommander_Back]> {

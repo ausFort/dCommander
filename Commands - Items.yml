@@ -1,6 +1,6 @@
 dCommander_Command_Item:
   type: command
-  debug: true
+  debug: false
   name: item
   aliases:
   - i

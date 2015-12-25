@@ -51,7 +51,7 @@ dCommander_Back_Saves:
       - queue clear
     }
     - define Current <yaml[dCommander_<player.uuid>].read[back_locations]||li@>
-    - if <def[Current].size> > <yaml[dCommander_Config].read[teleports.back.limit]> {
+    - if <def[Current].size> >= <yaml[dCommander_Config].read[teleports.back.limit]> {
       - yaml set back_locations:<-:<def[Current].first> id:dCommander_<player.uuid>
     }
     - yaml set back_locations:->:<context.origin> id:dCommander_<player.uuid>

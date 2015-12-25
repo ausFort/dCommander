@@ -21,10 +21,10 @@ dcommander_Command_SetHome:
         - narrate format:dCommander_Format "You have reached your home limit of <proc[dCPS]><def[Max]><proc[dCPP]> homes."
       }
       - if <proc[dCommander_Homes_Get].contains[<def[Name]>]> {
-        - narrate format:dCommander_Format "Overwriting home <proc[dCPS]><def[Name]><proc[dCPP]> at <proc[dCFL].context[<proc[dCommander_Homes_Location].context[<player.uuid>|<def[Name]>]>|true|true|true]><proc[dCPP]>."
+        - narrate format:dCommander_Format "Overwriting existing home at <proc[dCFL].context[<proc[dCommander_Homes_Location].context[<player.uuid>|<def[Name]>]>|true|true|true]><proc[dCPP]>."
       }
       - yaml set homes.<def[Name]>:<player.location.block> id:dCommander_<player.uuid>
-      - narrate format:dCommander_Format "New home <proc[dCPS]><def[Name].to_titlecase><proc[dCPP]> set at <proc[dCFL].context[<player.location.block.simple>|true|true|true]><proc[dCPP]>."
+      - narrate format:dCommander_Format "New home <proc[dCPS]><def[Name].to_titlecase><proc[dCPP]> set at <proc[dCFL].context[<player.location.block>|true|true|true]><proc[dCPP]>."
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
 
@@ -98,13 +98,12 @@ dcommander_Command_Home:
         - define Delay <yaml[dCommander_Config].read[teleports.delay.home.amount].as_int||3>
         - define Location <player.location.block>
         - narrate format:dCommander_Format "Moving will cancel your teleport."
-        - while <def[Delay].is[MORE].than[0]> {
+        - repeat <def[Delay]> {
           - if <player.location.block> != <def[Location]> {
             - narrate format:dCommander_Format "Teleportation has been cancelled as you have moved!"
             - queue clear
           }
-          - narrate format:dCommander_Format "You will be teleported in <proc[dCPS]><def[Delay]><proc[dCPP]> seconds."
-          - define Delay <def[Delay].sub[1]>
+          - title "subtitle:<proc[dPC].context[You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds.]>" fade_in:0 stay:1s fade_out:0.1s
           - wait 1s
         }
       }

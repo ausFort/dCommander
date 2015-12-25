@@ -91,16 +91,17 @@ dCommander_Command_Warp:
         - narrate format:dCommander_Format "No warp exists with the given name or you do not have permission for that warp."
         - queue clear
       }
-      - if <yaml[dCommander_Config].read[warps.delay.enabled]||false> {
-        - define Delay <yaml[dCommander_Config].read[warps.delay.amount].as_int||3>
+      - if <yaml[dCommander_Config].read[teleports.delay.warp.enabled]||false> {
+        - define Delay <yaml[dCommander_Config].read[teleports.delay.warp.amount].as_int||3>
         - define Location <player.location.block>
         - narrate format:dCommander_Format "Moving will cancel your warp."
-        - while <def[Delay]> > 0 {
+        - while <def[Delay].is[MORE].than[0]> {
           - if <player.location.block> != <def[Location]> {
             - narrate format:dCommander_Format "Warping has been cancelled as you have moved!"
             - queue clear
           }
           - narrate format:dCommander_Format "You will be warped in <proc[dCPS]><def[Delay]><proc[dCPP]> seconds."
+          - define Delay <def[Delay].sub[1]>
           - wait 1s
         }
       }

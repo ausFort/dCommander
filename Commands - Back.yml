@@ -22,6 +22,20 @@ dCommander_Command_Back:
     - queue clear
   }
   - define BackLoc <def[Locations].last>
+  - if <yaml[dCommander_Config].read[teleports.delay.back.enabled]||false> {
+    - define Delay <yaml[dCommander_Config].read[teleports.delay.back.amount].as_int||3>
+    - define Location <def[Target].location.block>
+    - narrate format:dCommander_Format "Moving will cancel your teleport."
+    - while <def[Delay].is[MORE].than[0]> {
+      - if <def[Target].location.block> != <def[Location]> {
+        - narrate format:dCommander_Format "Teleportation has been cancelled as you have moved!"
+        - queue clear
+      }
+      - narrate format:dCommander_Format "You will be teleported in <proc[dCPS]><def[Delay]><proc[dCPP]> seconds."
+      - define Delay <def[Delay].sub[1]>
+      - wait 1s
+    }
+  }
   - flag <player> dCommander_Back
   - teleport <player> <def[BackLoc]>
   - yaml set back_locations:<-:<def[BackLoc]> id:dCommander_<player.uuid>
@@ -37,7 +51,7 @@ dCommander_Back_Saves:
       - queue clear
     }
     - define Current <yaml[dCommander_<player.uuid>].read[back_locations]||li@>
-    - if <def[Current].size> > <yaml[dCommander_Config].read[back.limit]> {
+    - if <def[Current].size> > <yaml[dCommander_Config].read[teleports.back.limit]> {
       - yaml set back_locations:<-:<def[Current].first> id:dCommander_<player.uuid>
     }
     - yaml set back_locations:->:<context.origin> id:dCommander_<player.uuid>

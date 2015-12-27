@@ -75,6 +75,7 @@ dCommander_Initialise_Main:
   - yaml set teleports.delay.home.amount:3 id:dCommander_Config
   - yaml set teleports.delay.spawn.amount:3 id:dCommander_Config
   - yaml set teleports.delay.back.amount:3 id:dCommander_Config
+  - yaml set teleports.delay.display_location:title id:dCommander_Config
   - yaml set homes.limit.default:1 id:dCommander_Config
   - yaml set homes.limit.premium:3 id:dCommander_Config
   - yaml set "give.per_item_permissions:false" id:dCommander_Config

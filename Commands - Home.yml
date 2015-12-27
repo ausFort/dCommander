@@ -94,6 +94,7 @@ dcommander_Command_Home:
         - narrate format:dCommander_Format "You don't have a home by that name!"
         - queue clear
       }
+
       - if <yaml[dCommander_Config].read[teleports.delay.home.enabled]||false> {
         - define Delay <yaml[dCommander_Config].read[teleports.delay.home.amount].as_int||3>
         - define Location <player.location.block>
@@ -103,7 +104,16 @@ dcommander_Command_Home:
             - narrate format:dCommander_Format "Teleportation has been cancelled as you have moved!"
             - queue clear
           }
-          - title "subtitle:<proc[dPC].context[You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds.]>" fade_in:0 stay:1s fade_out:0.1s
+          - define dLoc <yaml[dCommander_Config].read[teleports.delay.display_location]>
+          - if <def[dLoc]> == title {
+            - title "subtitle:<proc[dPC].context[You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds.]>" fade_in:0 stay:1s fade_out:0.1s
+          }
+          else if <def[dLoc]> == action_bar {
+            - adjust <player> "action_bar:<proc[dPC].context[You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds.]>"
+          }
+          else {
+            - narrate format:dCommander_Format "You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds."
+          }
           - wait 1s
         }
       }
@@ -154,7 +164,7 @@ dCommander_Homes_Get_Max:
   - define Maxes li@1
   - foreach <yaml[dCommander_Config].list_keys[homes.limit]||li@> {
     - if <def[Player].has_permission[dcommander.homes.limit.<def[Value]>]> {
-      - define Maxes <def[Maxes].include[<yaml[dCommander_config].read[homes.limit.<def[Value]>]>]>
+      - define Maxes <def[Maxes].include[<yaml[dCommander_Config].read[homes.limit.<def[Value]>]>]>
     }
   }
   - determine <def[Maxes].numerical.last>

@@ -10,7 +10,7 @@ dCommander_Command_SetSpawn:
   script:
   - inject s@dCommander_Require_Ingame_Handler
   - adjust <player.world> spawn_location:<player.location.block>
-  - narrate format:dCommander_Format "Set the spawn of <proc[dCPS]><player.world.name><proc[dCPP]> to <proc[dCPS]><player.location.block.simple.replace[,<player.world.name>]><proc[dCPP]>."
+  - narrate format:dCommander_Format "Set the spawn of <proc[dCPS]><player.world.name><proc[dCPP]> to <proc[dCFL].context[<player.location.block>|true|true|false]><proc[dCPP]>."
 
 dCommander_Command_Spawn:
   type: command

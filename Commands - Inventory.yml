@@ -49,3 +49,39 @@ dCommander_Command_EnderSee:
       - inventory open d:<def[Target].enderchest>
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+
+dCommander_Command_ClearInventory:
+  type: command
+  debug: false
+  name: clearinventory
+  aliases:
+  - clear
+  - clearinv
+  - empty
+  usage: /clearinventory (player)
+  allowed help:
+  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  description: Clear your own or another player's inventory.
+  permission: dcommander.command.clearinventory
+  script:
+  - choose <context.args.size>:
+    - case 0:
+      - inject s@dCommander_Require_Player_Handler
+      - define Target <player>
+    - case 1:
+      - define Target <server.match_player[<context.args.get[1]>]||null>
+      - if <def[Target]> == null {
+        - narrate format:dCommander_Format "No player can be found by that name!"
+        - queue clear
+      }
+    - default:
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - queue clear
+
+  - inventory clear d:<def[Target].inventory>
+  - if <def[Target]> == <player> {
+    - narrate format:dCommander_Format "Cleared your inventory."
+    - queue clear
+  }
+  - narrate format:dCommander_Format "Cleared the inventory of <proc[dCPS]><def[Target].name><proc[dCPP]>."
+  - narrate format:dCommander_Format "Your inventory has been cleared." targets:<def[Target]>

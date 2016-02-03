@@ -22,7 +22,7 @@ dCommander_Command_Item:
         - queue clear
       }
       - if <yaml[dCommander_Config].read[give.per_item_permissions]> && <player.has_permission[dcommander.command.item.unrestricted].not> {
-        - if <player.has_permission[dCommander.command.item.<def[Item].scriptname||<def[Item].material>>].not> {
+        - if <player.has_permission[dCommander.command.item.<def[Item].scriptname||<def[Item].material.name>>].not> {
           - narrate format:dCommander_Format "You don't have permission to give this item!"
           - queue clear
         }
@@ -31,7 +31,7 @@ dCommander_Command_Item:
       - if <context.args.size> >= 2 {
         - define Quantity <context.args.get[2].as_int||null>
         - if <def[Quantity]> == null {
-          - narrate format:dCommander_Format "You must enter a number as the quantity. e.g. 2"
+          - narrate format:dCommander_Format "You must enter a whole number as the quantity. e.g. 2"
           - queue clear
         }
       }
@@ -46,7 +46,7 @@ dCommander_Command_Enchant:
   - enchantments
   - enchantment
   - enchants
-  usage: /enchant <&lt>list/enchantment<&gt> ...
+  usage: /enchant <&lt>list/enchantment(<&co>level)<&gt> ...
   allowed help:
   - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
   description: Enchant the item in your hand.

@@ -64,23 +64,26 @@ dCommander_Initialise_Main:
 
   initialise_config:
   - yaml create id:dCommander_Config
-  - yaml set colors.primary:&f id:dCommander_Config
-  - yaml set colors.secondary:&6 id:dCommander_Config
+  - yaml set "colors.primary:&f" id:dCommander_Config
+  - yaml set "colors.secondary:&6" id:dCommander_Config
   - yaml set "warps.per_warp_permissions:false" id:dCommander_Config
-  - yaml set teleports.delay.warp.enabled:false id:dCommander_Config
-  - yaml set teleports.delay.home.enabled:false id:dCommander_Config
-  - yaml set teleports.delay.spawn.enabled:false id:dCommander_Config
-  - yaml set teleports.delay.back.enabled:false id:dCommander_Config
-  - yaml set teleports.delay.warp.amount:3 id:dCommander_Config
-  - yaml set teleports.delay.home.amount:3 id:dCommander_Config
-  - yaml set teleports.delay.spawn.amount:3 id:dCommander_Config
-  - yaml set teleports.delay.back.amount:3 id:dCommander_Config
-  - yaml set teleports.delay.display_location:title id:dCommander_Config
-  - yaml set homes.limit.default:1 id:dCommander_Config
-  - yaml set homes.limit.premium:3 id:dCommander_Config
+  - yaml set "teleports.delay.warp.enabled:false" id:dCommander_Config
+  - yaml set "teleports.delay.home.enabled:false" id:dCommander_Config
+  - yaml set "teleports.delay.spawn.enabled:false" id:dCommander_Config
+  - yaml set "teleports.delay.back.enabled:false" id:dCommander_Config
+  - yaml set "teleports.delay.warp.amount:3" id:dCommander_Config
+  - yaml set "teleports.delay.home.amount:3" id:dCommander_Config
+  - yaml set "teleports.delay.spawn.amount:3" id:dCommander_Config
+  - yaml set "teleports.delay.back.amount:3" id:dCommander_Config
+  - yaml set "teleports.delay.display_location:title" id:dCommander_Config
+  - yaml set "homes.limit.default:1" id:dCommander_Config
+  - yaml set "homes.limit.premium:3" id:dCommander_Config
   - yaml set "give.per_item_permissions:false" id:dCommander_Config
   - yaml set "teleports.back.limit:5" id:dCommander_Config
-  - yaml savefile:/dCommander/config.yml id:dCommander_Config
+  - yaml set "teleports.back.death:false" id:dCommander_Config
+  - yaml set "messages.join.enabled:false" id:dCommander_Config
+  - yaml set "messages.join.message:&6Please welcome &f<&pc>name<&pc>&6 to the server!" id:dCommander_Config
+  - yaml "savefile:/dCommander/config.yml" id:dCommander_Config
 
 dCommander_Initialise_Players:
   type: world
@@ -101,6 +104,13 @@ dCommander_Initialise_Players:
     - define Name <player.name>
     - if <yaml[dCommander_<player.uuid>].read[seen.names].contains[<def[Name]>].not||true> {
       - yaml set seen.names:->:<def[Name]> id:dCommander_<player.uuid>
+    }
+    - if <yaml[dCommander_Config].read[messages.join.enabled]||false> {
+      - define Name <player.name>
+      - if <yaml[dCommander_Config].contains[messages.join.message].not> {
+        - queue clear
+      }
+      - determine <yaml[dCommander_Config].read[messages.join.message].parse_color.replace[<&pc>name<&pc>].with[<def[Name]>]>
     }
 
 dCommander_Players_Save:
@@ -186,7 +196,7 @@ dCFL:
   - if <def[With_World]> {
     - define World ", <t[<def[Colored]>]:<proc[dCPS]><def[dLoc].world.name>||<def[dLoc].world.name>>"
   }
-  - define dLoc "<def[X]>, <def[Y]>, <def[Z]><def[World]><&r>"
+  - define dLoc "<def[X]>, <def[Y]>, <def[Z]><def[World]>&r"
   - determine <def[dLoc].parse_color>
 
 dCommander_Require_Ingame_Handler:

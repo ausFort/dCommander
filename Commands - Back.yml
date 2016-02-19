@@ -52,15 +52,21 @@ dCommander_Command_Back:
 dCommander_Back_Saves:
   type: world
   debug: false
+  add_location:
+  - wait 1t
+  - if <player.has_flag[dCommander_Back]> {
+    - flag <player> dCommander_Back:!
+    - queue clear
+  }
+  - define Current <yaml[dCommander_<player.uuid>].read[back_locations]||li@>
+  - if <def[Current].size> >= <yaml[dCommander_Config].read[teleports.back.limit]> {
+    - yaml set back_locations:<-:<def[Current].first> id:dCommander_<player.uuid>
+  }
+  - yaml set back_locations:->:<context.origin> id:dCommander_<player.uuid>
   events:
     on player teleports:
-    - wait 1t
-    - if <player.has_flag[dCommander_Back]> {
-      - flag <player> dCommander_Back:!
-      - queue clear
+    - inject locally add_location
+    on entity killed:
+    - if <yaml[dCommander_Config].read[teleports.back.death]||false> {
+      - inject locally add_location
     }
-    - define Current <yaml[dCommander_<player.uuid>].read[back_locations]||li@>
-    - if <def[Current].size> >= <yaml[dCommander_Config].read[teleports.back.limit]> {
-      - yaml set back_locations:<-:<def[Current].first> id:dCommander_<player.uuid>
-    }
-    - yaml set back_locations:->:<context.origin> id:dCommander_<player.uuid>

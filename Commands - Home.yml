@@ -44,6 +44,7 @@ dCommander_Command_DeleteHome:
       - determine <proc[dCommander_Homes_Get].filter[starts_with[<context.args.last>]]>
   permission: dcommander.command.delhome
   script:
+  - inject s@dCommander_Require_Ingame_Handler
   - choose <context.args.size>:
     - case 1:
       - define Name <context.args.get[1]>
@@ -76,6 +77,7 @@ dcommander_Command_Home:
       - determine <proc[dCommander_Homes_Get].filter[starts_with[<context.args.last>]]>
   permission: dcommander.command.home
   script:
+  - inject s@dCommander_Require_Ingame_Handler
   - define Homes <proc[dCommander_Homes_Get]>
   - choose <context.args.size>:
     - case 0:

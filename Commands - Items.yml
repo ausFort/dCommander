@@ -51,41 +51,19 @@ dCommander_Command_Enchant:
   - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
   description: Enchant the item in your hand.
   permission: dcommander.command.enchant
-  valid:
-  - ARROW_DAMAGE
-  - ARROW_FIRE
-  - ARROW_INFINITE
-  - ARROW_KNOCKBACK
-  - DAMAGE_ALL
-  - DAMAGE_ANTHROPODSROPODS
-  - DAMAGE_UNDEAD
-  - DEPTH_STRIDER
-  - DIG_SPEED
-  - DURABILITY
-  - FIRE_ASPECT
-  - KNOCKBACK
-  - LOOT_BONUS_BLOCKS
-  - LUCK
-  - LURE
-  - OXYGEN
-  - PROTECTION_ENVIRONMENTAL
-  - PROTECTION_EXPLOSIONS
-  - PROTECTION_FALL
-  - PROTECTION_FIRE
-  - PROTECTION_PROJECTILE
-  - SILK_TOUCH
-  - THORNS
-  - WATER_WORKER
   script:
+  - define valid <server.list_enchantments>
   - choose <context.args.size>:
     - case 0:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
 
     - default:
       - if <context.args.get[1]> == list {
-        - narrate format:dCommander_Format "Valid enchantments are:<proc[dCPS]> <script.yaml_key[valid].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
+        - narrate format:dCommander_Format "Valid enchantments are:<proc[dCPS]> <def[valid].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
         - queue clear
       }
+     
+      - inject s@dCommander_Require_Ingame_Handler
       - define Item <player.item_in_hand>
       - if <def[Item].material.name> == air {
         - narrate format:dCommander_Format "You cannot enchant air!"
@@ -94,7 +72,7 @@ dCommander_Command_Enchant:
       - define Enchantments <context.args>
       - foreach <def[Enchantments]> {
         - define Enchantment <def[Value].before[:]>
-        - if <script.yaml_key[valid].contains[<def[Enchantment]>].not> {
+        - if <def[valid].contains[<def[Enchantment]>].not> {
           - narrate format:dCommander_Format "Invalid enchantment:<proc[dCPS]> <def[Enchantment].to_uppercase><proc[dCPP]>."
           - queue clear
         }

@@ -3,13 +3,18 @@ dcommander_Command_SetHome:
   debug: false
   name: sethome
   usage: /sethome <&lt>home name<&gt>
+
   allowed help:
   - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+
   description: Set a new home to your current location.
+
   permission: dcommander.command.sethome
   script:
   - inject s@dCommander_Require_Ingame_Handler
+
   - choose <context.args.size>:
+
     - case 1:
       - define Name <context.args.get[1]>
       - if <def[Name]> != <def[Name].escaped> {
@@ -25,27 +30,35 @@ dcommander_Command_SetHome:
       }
       - yaml set homes.<def[Name]>:<player.location.block> id:dCommander_<player.uuid>
       - narrate format:dCommander_Format "New home <proc[dCPS]><def[Name].to_titlecase><proc[dCPP]> set at <proc[dCFL].context[<player.location.block>|true|true|true]><proc[dCPP]>."
+
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+
 
 dCommander_Command_DeleteHome:
   type: command
   debug: false
   name: delhome
   usage: /delhome <&lt>home name<&gt>
+
   allowed help:
   - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+
   description: Deletes your home with the given name (if it exists).
+
   tab complete:
   - choose <context.args.size>:
     - case 0:
       - determine <proc[dCommander_Homes_Get]>
     - default:
       - determine <proc[dCommander_Homes_Get].filter[starts_with[<context.args.last>]]>
+
   permission: dcommander.command.delhome
   script:
   - inject s@dCommander_Require_Ingame_Handler
+
   - choose <context.args.size>:
+
     - case 1:
       - define Name <context.args.get[1]>
       - if <def[Name]> != <def[Name].escaped> {
@@ -58,6 +71,7 @@ dCommander_Command_DeleteHome:
       }
       - narrate format:dCommander_Format "Removed home <proc[dCPS]><def[Name]><proc[dCPP]> from location <proc[dCFL].context[<proc[dCommander_Homes_Location].context[<player.uuid>|<def[Name]>]>|true|true|true]><proc[dCPP]>."
       - yaml set homes.<def[Name]>:! id:dCommander_<player.uuid>
+
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
 
@@ -66,26 +80,33 @@ dcommander_Command_Home:
   debug: false
   name: home
   usage: /home <&lt>home name<&gt>
+
   allowed help:
   - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+
   description: Go to one of your homes.
+
   tab complete:
   - choose <context.args.size>:
     - case 0:
       - determine <proc[dCommander_Homes_Get]>
     - default:
       - determine <proc[dCommander_Homes_Get].filter[starts_with[<context.args.last>]]>
+
   permission: dcommander.command.home
   script:
   - inject s@dCommander_Require_Ingame_Handler
+
   - define Homes <proc[dCommander_Homes_Get]>
   - choose <context.args.size>:
+
     - case 0:
       - if <def[Homes].is_empty> {
         - narrate format:dCommander_Format "You currently have no homes set!"
         - queue clear
       }
       - narrate format:dCommander_Format "Your Homes:<proc[dCPS]> <def[Homes].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
+
     - case 1:
       - define Name <context.args.get[1]>
       - if <def[Name]> != <def[Name].escaped> {
@@ -121,6 +142,7 @@ dcommander_Command_Home:
       }
       - teleport <player> <proc[dCommander_Homes_Location].context[<player.uuid>|<def[Name]>]>
       - narrate format:dCommander_Format "You've been teleported to your home <proc[dCPS]><def[Name].to_titlecase><proc[dCPP]>."
+
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
 

@@ -35,5 +35,7 @@ dCommander_Command_Seen:
           - narrate format:dCommander_Col_Format "&f    Expiry:<proc[dCPS]> <t[<def[Expiry].in_seconds.is[==].to[0]>]:Never||<def[Expiry].time>>"
         }
       }
+
+      # Args Size != 1
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"

@@ -80,7 +80,7 @@ dCommander_Command_Enchant:
         - if <def[Level]> == "" {
           - define Level 1
         }
-        - if <def[Level]> == null || <def[Level]> <= 0 {
+        - if <def[Level]> == null || <def[Level]> !matches number || <def[Level]> <= 0 {
           - narrate format:dCommander_Format "Enchantment level must be atleast 1! @<proc[dCPS]><def[Enchantment].to_uppercase><proc[dCPP]>."
           - queue clear
         }

@@ -3,6 +3,7 @@ dCommand_Command_InventorySee:
   debug: false
   name: inventorysee
   aliases:
+  - isee
   - invsee
   - checkinventory
   usage: /inventorysee <&lt>player<&gt>
@@ -15,10 +16,14 @@ dCommand_Command_InventorySee:
   - choose <context.args.size>:
     - case 1:
       - define Target <server.match_offline_player[<context.args.get[1]>]||null>
-      - if <def[Target]> == null {
+      - if <def[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
         - queue clear
-      }
+
+      - else if <def[Target]> == <player>:
+        - narrate format:dCommander_Format "Why are you trying to peek at your own inventory?"
+        - queue clear
+
       - narrate format:dCommander_Format "Opening inventory of <proc[dCPS]><def[Target].name><proc[dCPP]>."
       - inventory open d:<def[Target].inventory>
     - default:
@@ -41,10 +46,10 @@ dCommander_Command_EnderSee:
   - choose <context.args.size>:
     - case 1:
       - define Target <server.match_offline_player[<context.args.get[1]>]||null>
-      - if <def[Target]> == null {
+      - if <def[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
         - queue clear
-      }
+
       - narrate format:dCommander_Format "Opening enderchest of <proc[dCPS]><def[Target].name><proc[dCPP]>."
       - inventory open d:<def[Target].enderchest>
     - default:
@@ -70,18 +75,18 @@ dCommander_Command_ClearInventory:
       - define Target <player>
     - case 1:
       - define Target <server.match_player[<context.args.get[1]>]||null>
-      - if <def[Target]> == null {
+      - if <def[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
         - queue clear
-      }
+
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
       - queue clear
 
   - inventory clear d:<def[Target].inventory>
-  - if <def[Target]> == <player> {
+  - if <def[Target]> == <player>:
     - narrate format:dCommander_Format "Cleared your inventory."
     - queue clear
-  }
+
   - narrate format:dCommander_Format "Cleared the inventory of <proc[dCPS]><def[Target].name><proc[dCPP]>."
   - narrate format:dCommander_Format "Your inventory has been cleared." targets:<def[Target]>

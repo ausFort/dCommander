@@ -12,13 +12,13 @@ dCommander_Command_SetWarp:
   - choose <context.args.size>:
     - case 1:
       - define Name <context.args.get[1]>
-      - if <def[Name]> != <def[Name].escaped> {
+      - if <def[Name]> != <def[Name].escaped>:
         - narrate format:dCommander_Format "Plain text only, please."
         - queue clear
-      }
-      - if <yaml[dCommander_Warps].contains[<def[Name]>]> {
+
+      - if <yaml[dCommander_Warps].contains[<def[Name]>]>:
         - narrate format:dCommander_Format "Overwriting existing warp at <proc[dCFL].context[<proc[dCommander_Warps_Location].context[<def[Name]>]>|true|true|true]><proc[dCPP]>."
-      }
+
       - run s@dCommander_Warps_Set def:<def[Name]>|<player.location.block>|<player> instantly
       - narrate format:dCommander_Format "Warp <proc[dCPS]><def[Name]><proc[dCPP]> created at <proc[dCFL].context[<proc[dCommander_Warps_Location].context[<def[Name]>]>|true|true|true]><proc[dCPP]>."
     - default:
@@ -43,14 +43,14 @@ dCommander_Command_DeleteWarp:
   - choose <context.args.size>:
     - case 1:
       - define Name <context.args.get[1]>
-      - if <def[Name]> != <def[Name].escaped> {
+      - if <def[Name]> != <def[Name].escaped>:
         - narrate format:dCommander_Format "Plain text only, please."
         - queue clear
-      }
-      - if <yaml[dCommander_Warps].contains[<def[Name]>].not> {
+
+      - if <yaml[dCommander_Warps].contains[<def[Name]>].not>:
         - narrate format:dCommander_Format "No warp exists with the given name."
         - queue clear
-      }
+
       - narrate format:dCommander_Format "Removed warp <proc[dCPS]><def[Name]><proc[dCPP]> from <proc[dCFL].context[<proc[dCommander_Warps_Location].context[<def[Name]>]>|true|true|true]><proc[dCPP]>."
       - yaml set <def[Name]>:! id:dCommander_Warps
     - default:
@@ -76,43 +76,43 @@ dCommander_Command_Warp:
   - define Warps <proc[dCommander_Warps_Get]>
   - choose <context.args.size>:
     - case 0:
-      - if <def[Warps].is_empty> {
+      - if <def[Warps].is_empty>:
         - narrate format:dCommander_Format "You currently have no warps available to you!"
         - queue clear
-      }
+
       - narrate format:dCommander_Format "Available Warps:<proc[dCPS]> <def[Warps].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
     - case 1:
       - define Target <context.args.get[1]>
-      - if <def[Target]> != <def[Target].escaped> {
+      - if <def[Target]> != <def[Target].escaped>:
         - narrate format:dCommander_Format "Plain text only, please."
         - queue clear
-      }
-      - if <def[Warps].contains[<def[Target]>].not> {
+
+      - if <def[Warps].contains[<def[Target]>].not>:
         - narrate format:dCommander_Format "No warp exists with the given name or you do not have permission for that warp."
         - queue clear
-      }
-      - if <yaml[dCommander_Config].read[teleports.delay.warp.enabled]||false> {
+
+      - if <yaml[dCommander_Config].read[teleports.delay.warp.enabled]||false>:
         - define Delay <yaml[dCommander_Config].read[teleports.delay.warp.amount].as_int||3>
         - define Location <player.location.block>
         - narrate format:dCommander_Format "Moving will cancel your teleport."
-        - repeat <def[Delay]> {
-          - if <player.location.block> != <def[Location]> {
+        - repeat <def[Delay]>:
+          - if <player.location.block> != <def[Location]>:
             - narrate format:dCommander_Format "Teleportation has been cancelled as you have moved!"
             - queue clear
-          }
+
           - define dLoc <yaml[dCommander_Config].read[teleports.delay.display_location]>
-          - if <def[dLoc]> == title {
+          - if <def[dLoc]> == title:
             - title "subtitle:<proc[dPC].context[You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds.]>" fade_in:0 stay:1s fade_out:0.1s
-          }
-          else if <def[dLoc]> == action_bar {
+
+          - else if <def[dLoc]> == action_bar:
             - adjust <player> "action_bar:<proc[dPC].context[You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds.]>"
-          }
-          else {
+
+          - else:
             - narrate format:dCommander_Format "You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds."
-          }
+
           - wait 1s
-        }
-      }
+
+
       - teleport <player> <proc[dCommander_Warps_Location].context[<def[Target]>]>
       - narrate format:dCommander_Format "You have been warped to <proc[dCPS]><def[Target].to_titlecase><proc[dCPP]>."
     - default:
@@ -123,9 +123,9 @@ dCommander_Warps_Location:
   debug: false
   definitions: WarpName
   script:
-  - if <yaml[dCommander_Warps].contains[<def[WarpName]>]> {
+  - if <yaml[dCommander_Warps].contains[<def[WarpName]>]>:
     - determine <yaml[dCommander_Warps].read[<def[WarpName]>.location]>
-  }
+
   - determine "Unknown Location"
 
 dCommander_Warps_Set:
@@ -134,22 +134,22 @@ dCommander_Warps_Set:
   definitions: Name|Location|Creator
   script:
   - yaml set <def[Name]>.location:<def[Location]> id:dCommander_Warps
-  - if <def[Creator].exists> {
+  - if <def[Creator].exists>:
     - yaml set <def[Name]>.creator:<def[Creator]> id:dCommander_Warps
-  }
+
 
 dCommander_Warps_Get:
   type: procedure
   debug: false
   definitions: All
   script:
-  - if <def[All]||false> || "<yaml[dCommander_Config].read[warps.per_warp_permissions].not||true>" {
+  - if <def[All]||false> || "<yaml[dCommander_Config].read[warps.per_warp_permissions].not||true>":
     - determine <yaml[dCommander_Warps].list_keys[].parse[to_titlecase]>
-  }
+
   - define Warps li@
-  - foreach <yaml[dCommander_Warps].list_keys[]> {
-    - if <player.has_permission[dcommander.command.warp.<def[Value]>]> {
+  - foreach <yaml[dCommander_Warps].list_keys[]>:
+    - if <player.has_permission[dcommander.command.warp.<def[Value]>]>:
       - define Warps <def[Warps].include[<def[Value].to_titlecase>]>
-    }
-  }
+
+
   - determine <def[Warps]>

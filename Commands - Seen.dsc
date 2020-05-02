@@ -3,39 +3,74 @@ dCommander_Command_Seen:
   debug: false
   name: seen
   usage: /seen <&lt>user<&gt>
+
   aliases:
   - lastseen
   - whois
   - who
+
   allowed help:
   - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+
   description: Get information from when a player was last seen.
+
   permission: dcommander.command.seen
   script:
   - choose <context.args.size>:
+
     - case 1:
       - define Target <server.match_offline_player[<context.args.get[1]>]||null>
-      - if <def[Target]> == null {
+      - if <def[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
         - queue clear
-      }
+
       - define Admin <player.has_permission[dcommander.command.seen.admin]||<context.server>>
       - narrate format:dCommander_Format "Last seen of player:<proc[dCPS]> <def[Target].name>"
-      - if <def[Admin]> {
+      - if <def[Admin]>:
         - narrate format:dCommander_Col_Format "IP Address:<proc[dCPS]> <yaml[dCommander_<def[Target].uuid>].read[seen.ips].last||Unknown>"
-      }
+
       - narrate format:dCommander_Col_Format "Last Online:<proc[dCPS]> <t[<def[Target].is_online>]:Now||<def[Target].last_played.time>>"
       - narrate format:dCommander_Col_Format "Health:<proc[dCPS]> <t[<def[Target].health.is[==].to[0]>]:Dead!||<def[Target].health><proc[dCPP]>/<proc[dCPS]><def[Target].health.max>>"
       - narrate format:dCommander_Col_Format "Banned:<proc[dCPS]> <def[Target].is_banned>"
-      - if <def[Admin]> {
-        - if <def[Target].is_banned> {
+      - if <def[Admin]>:
+        - if <def[Target].is_banned>:
           - narrate format:dCommander_Col_Format "&f      When:<proc[dCPS]> <def[Target].ban_info.created.time>"
           - narrate format:dCommander_Col_Format "&f       Why:<proc[dCPS]> <def[Target].ban_info.reason>"
           - define Expiry <def[Target].ban_info.expiration>
           - narrate format:dCommander_Col_Format "&f    Expiry:<proc[dCPS]> <t[<def[Expiry].in_seconds.is[==].to[0]>]:Never||<def[Expiry].time>>"
-        }
-      }
 
-      # Args Size != 1
+
+
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+
+dCommander_Command_NameHistory:
+  type: command
+  debug: false
+  name: namehistory
+  usage: /namehistory <&lt>user<&gt>
+
+  aliases:
+  - names
+  - historyname
+
+  allowed help:
+  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+
+  description: Get the name history of a player.
+
+  permission: dcommander.command.namehistory
+  script:
+  - choose <context.args.size>:
+    - case 1:
+      - define Target <server.match_offline_player[<context.args.get[1]>]||null>
+      - if <def[Target]> == null:
+        - narrate format:dCommander_Format "No player can be found by that name!"
+        - queue clear
+
+
+      - define Names <yaml[dCommander_<def[Target].uuid>].read[seen.names]>
+      - narrate format:dCommander_Format "Known names of: <def[Target].name>"
+      - foreach <def[Names]>:
+        - narrate ""
+

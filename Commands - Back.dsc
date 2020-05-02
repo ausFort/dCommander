@@ -17,33 +17,33 @@ dCommander_Command_Back:
   script:
   - inject s@dCommander_Require_Ingame_Handler
   - define Locations <yaml[dCommander_<player.uuid>].read[back_locations]||li@>
-  - if <def[Locations].is_empty> {
+  - if <def[Locations].is_empty>:
     - narrate format:dCommander_Format "You have not been teleported recently!"
     - queue clear
-  }
+
   - define BackLoc <def[Locations].last>
-  - if <yaml[dCommander_Config].read[teleports.delay.back.enabled]||false> {
+  - if <yaml[dCommander_Config].read[teleports.delay.back.enabled]||false>:
     - define Delay <yaml[dCommander_Config].read[teleports.delay.back.amount].as_int||3>
     - define Location <player.location.block>
     - narrate format:dCommander_Format "Moving will cancel your teleport."
-    - repeat <def[Delay]> {
-      - if <player.location.block> != <def[Location]> {
+    - repeat <def[Delay]>:
+      - if <player.location.block> != <def[Location]>:
         - narrate format:dCommander_Format "Teleportation has been cancelled as you have moved!"
         - queue clear
-      }
+
       - define dLoc <yaml[dCommander_Config].read[teleports.delay.display_location]>
-      - if <def[dLoc]> == title {
+      - if <def[dLoc]> == title:
         - title "subtitle:<proc[dPC].context[You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds.]>" fade_in:0 stay:1s fade_out:0.1s
-      }
-      else if <def[dLoc]> == action_bar {
+
+      - else if <def[dLoc]> == action_bar:
         - adjust <player> "action_bar:<proc[dPC].context[You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds.]>"
-      }
-      else {
+
+      - else:
         - narrate format:dCommander_Format "You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds."
-      }
+
       - wait 1s
-    }
-  }
+
+
   - flag <player> dCommander_Back
   - teleport <player> <def[BackLoc]>
   - yaml set back_locations:<-:<def[BackLoc]> id:dCommander_<player.uuid>
@@ -54,19 +54,23 @@ dCommander_Back_Saves:
   debug: false
   add_location:
   - wait 1t
-  - if <player.has_flag[dCommander_Back]> {
+  - if <player.has_flag[dCommander_Back]>:
     - flag <player> dCommander_Back:!
     - queue clear
-  }
+
   - define Current <yaml[dCommander_<player.uuid>].read[back_locations]||li@>
-  - if <def[Current].size> >= <yaml[dCommander_Config].read[teleports.back.limit]> {
+  - if <def[Current].size> >= <yaml[dCommander_Config].read[teleports.back.limit]>:
     - yaml set back_locations:<-:<def[Current].first> id:dCommander_<player.uuid>
-  }
+
   - yaml set back_locations:->:<context.origin> id:dCommander_<player.uuid>
   events:
     on player teleports:
     - inject locally add_location
-    on entity killed:
-    - if <yaml[dCommander_Config].read[teleports.back.death]||false> {
-      - inject locally add_location
-    }
+    on player killed:
+    - if <yaml[dCommander_Config].read[teleports.back.death]||false>:
+    - define Current <yaml[dCommander_<player.uuid>].read[back_locations]||li@>
+    - if <def[Current].size> >= <yaml[dCommander_Config].read[teleports.back.limit]> && <def[Current].is_empty.not>:
+      - yaml set back_locations:<-:<def[Current].first> id:dCommander_<player.uuid>
+
+    - yaml set back_locations:->:<context.origin> id:dCommander_<player.uuid>
+

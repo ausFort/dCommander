@@ -28,46 +28,47 @@ dCommander_Command_Spawn:
       - define Target <player>
     - case 1:
       - define Target <server.match_player[<context.args.get[1]>]||null>
-      - if <def[Target]> == null {
+      - if <def[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
         - queue clear
-      }
+
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
       - queue clear
 
-  - if <yaml[dCommander_Config].read[teleports.delay.spawn.enabled]||false> {
+  - if <yaml[dCommander_Config].read[teleports.delay.spawn.enabled]||false>:
     - define Delay <yaml[dCommander_Config].read[teleports.delay.spawn.amount].as_int||3>
     - define Location <player.location.block>
     - narrate format:dCommander_Format "Moving will cancel your teleport."
-    - repeat <def[Delay]> {
-      - if <player.location.block> != <def[Location]> {
+    - repeat <def[Delay]>:
+      - if <player.location.block> != <def[Location]>:
         - narrate format:dCommander_Format "Teleportation has been cancelled as you have moved!"
         - queue clear
-      }
+
       - define dLoc <yaml[dCommander_Config].read[teleports.delay.display_location]>
-      - if <def[dLoc]> == title {
+      - if <def[dLoc]> == title:
         - title "subtitle:<proc[dPC].context[You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds.]>" fade_in:0 stay:1s fade_out:0.1s
-      }
-      else if <def[dLoc]> == action_bar {
+
+      - else if <def[dLoc]> == action_bar:
         - adjust <player> "action_bar:<proc[dPC].context[You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds.]>"
-      }
-      else {
+
+      - else:
         - narrate format:dCommander_Format "You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds."
-      }
+
       - wait 1s
-    }
-  }
+
+
   - teleport <def[Target]> <def[Target].world.spawn_location>
-  - if <def[Target]> == <player> {
+  - if <def[Target]> == <player>:
     - narrate format:dCommander_Format "You have been teleported to spawn!"
     - queue clear
-  }
+
   - narrate format:dCommander_Format "<proc[dCPS]><def[Target].name><proc[dCPP]> has been teleported to spawn."
   - narrate format:dCommander_Format "<proc[dCPS]><player.name||console><proc[dCPP]> has teleported you to spawn." targets:<def[Target]>
 
 dCommander_Command_Teleport:
   type: command
+  debug: false
   name: teleport
   aliases:
   - tp
@@ -83,50 +84,50 @@ dCommander_Command_Teleport:
     - case 1:
       - inject s@dCommander_Require_Player_Handler
       - define Destination <server.match_offline_player[<context.args.get[1]>]||null>
-      - if <def[Destination]> == null {
+      - if <def[Destination]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
         - queue clear
-      }
+
       - define Target <player>
     - case 2:
       - define Target <server.match_player[<context.args.get[1]>]||null>
-      - if <def[Target]> == null {
+      - if <def[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
         - queue clear
-      }
+
       - define Destination <server.match_offline_player[<context.args.get[2]>]||null>
-      - if <def[Destination]> == null {
+      - if <def[Destination]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
         - queue clear
-      }
+
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
       - queue clear
 
-  - if <def[Target]> == <def[Destination]> {
+  - if <def[Target]> == <def[Destination]>:
     - narrate format:dCommander_Format "Cannot teleport a player to themself!"
     - queue clear
-  }
-  - if <yaml[dCommander_Config].read[teleports.delay.teleport.enabled]||false> {
+
+  - if <yaml[dCommander_Config].read[teleports.delay.teleport.enabled]||false>:
     - define Delay <yaml[dCommander_Config].read[teleports.delay.teleport.amount].as_int||3>
     - define Location <player.location.block>
     - narrate format:dCommander_Format "Moving will cancel your teleport."
-    - repeat <def[Delay]> {
-      - if <player.location.block> != <def[Location]> {
+    - repeat <def[Delay]>:
+      - if <player.location.block> != <def[Location]>:
         - narrate format:dCommander_Format "Teleportation has been cancelled as you have moved!"
         - queue clear
-      }
+
       - title "subtitle:<proc[dPC].context[You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds.]>" fade_in:0 stay:1s fade_out:0.1s
       - wait 1s
-    }
-  }
+
+
   - teleport <def[Target]> <def[Destination].location>
-  - if <def[Target]> == <player> {
+  - if <def[Target]> == <player>:
     - narrate format:dCommander_Format "You have been teleported to <proc[dCPS]><def[Destination].name><proc[dCPP]>." targets:<def[Target]>
-  }
-  else {
+
+  - else:
     - narrate format:dCommander_Format "<proc[dCPS]><def[Target].name><proc[dCPP]> was teleported to <proc[dCPS]><def[Destination].name><proc[dCPP]>."
-  }
+
 
 dCommander_Command_Teleport_Here:
   type: command
@@ -149,14 +150,14 @@ dCommander_Command_Teleport_Here:
   - choose <context.args.size>:
     - case 1:
       - define Target <server.match_player[<context.args.get[1]>]||null>
-      - if <def[Target]> == null {
+      - if <def[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
         - queue clear
-      }
-      - if <def[Target]> == <player> {
+
+      - if <def[Target]> == <player>:
         - narrate format:dCommander_Format "You cannot teleport yourself to yourself!"
         - queue clear
-      }
+
       - teleport <def[Target]> <player.location>
       - narrate format:dCommander_Format "<proc[dCPS]><def[Target].name><proc[dCPP]> has been teleported to you!"
       - narrate format:dCommander_Format "<proc[dCPS]><player.name><proc[dCPP]> teleported you to them!" targets:<def[Target]>
@@ -180,25 +181,25 @@ dCommander_Command_Teleport_pos:
   - choose <context.args.size>:
     - case 3:
       - define Error false
-      - if <context.args.get[1].is[matches].to[number].not> {
+      - if <context.args.get[1].is[matches].to[number].not>:
         - narrate format:dCommander_Format "Your <&6>X<&f> coordinate is not a number!"
         - define Error true
-      }
-      - if <context.args.get[2].is[matches].to[number].not> {
+
+      - if <context.args.get[2].is[matches].to[number].not>:
         - narrate format:dCommander_Format "Your <&6>Z<&f> coordinate is not a number!"
         - define Error true
-      }
-      else if <context.args.get[2]> > 256 || <context.args.get[2]> < 0 {
+
+      - else if <context.args.get[2]> > 256 || <context.args.get[2]> < 0:
         - narrate format:dCommander_Format "Y coordinate values must be between 0 and 256."
         - define Error true
-      }
-      - if <context.args.get[3].is[matches].to[number].not> {
+
+      - if <context.args.get[3].is[matches].to[number].not>:
         - narrate format:dCommander_Format "Your <&6>Y<&f> coordinate is not a number!"
         - define Error true
-      }
-      - if <def[Error]> {
+
+      - if <def[Error]>:
         - queue clear
-      }
+
       - define Location <location[<context.args.get[1]>,<context.args.get[2]>,<context.args.get[3]>,<player.world.name>]>
       - teleport <player> <def[Location]>
       - narrate format:dCommander_Format "You have been teleported to <proc[dCFL].context[<def[Location]>|false|true|false]>"

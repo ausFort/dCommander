@@ -17,19 +17,19 @@ dcommander_Command_SetHome:
 
     - case 1:
       - define Name <context.args.get[1]>
-      - if <def[Name]> != <def[Name].escaped>:
+      - if <[Name]> != <[Name].escaped>:
         - narrate format:dCommander_Format "Plain text only, please."
         - queue clear
 
       - define Max <proc[dCommander_Homes_Get_Max].context[<player>]>
-      - if <def[Max]> != -1 && <proc[dCommander_Homes_Get].size> == <def[Max]> && <player.has_permission[dCommander.homes.unlimited].not>:
-        - narrate format:dCommander_Format "You have reached your home limit of <proc[dCPS]><def[Max]><proc[dCPP]> homes."
+      - if <[Max]> != -1 && <proc[dCommander_Homes_Get].size> == <[Max]> && <player.has_permission[dCommander.homes.unlimited].not>:
+        - narrate format:dCommander_Format "You have reached your home limit of <proc[dCPS]><[Max]><proc[dCPP]> homes."
 
-      - if <proc[dCommander_Homes_Get].contains[<def[Name]>]>:
-        - narrate format:dCommander_Format "Overwriting existing home at <proc[dCFL].context[<proc[dCommander_Homes_Location].context[<player.uuid>|<def[Name]>]>|true|true|true]><proc[dCPP]>."
+      - if <proc[dCommander_Homes_Get].contains[<[Name]>]>:
+        - narrate format:dCommander_Format "Overwriting existing home at <proc[dCFL].context[<proc[dCommander_Homes_Location].context[<player.uuid>|<[Name]>]>|true|true|true]><proc[dCPP]>."
 
-      - yaml set homes.<def[Name]>:<player.location.block> id:dCommander_<player.uuid>
-      - narrate format:dCommander_Format "New home <proc[dCPS]><def[Name].to_titlecase><proc[dCPP]> set at <proc[dCFL].context[<player.location.block>|true|true|true]><proc[dCPP]>."
+      - yaml set homes.<[Name]>:<player.location.block> id:dCommander_<player.uuid>
+      - narrate format:dCommander_Format "New home <proc[dCPS]><[Name].to_titlecase><proc[dCPP]> set at <proc[dCFL].context[<player.location.block>|true|true|true]><proc[dCPP]>."
 
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
@@ -61,16 +61,16 @@ dCommander_Command_DeleteHome:
 
     - case 1:
       - define Name <context.args.get[1]>
-      - if <def[Name]> != <def[Name].escaped>:
+      - if <[Name]> != <[Name].escaped>:
         - narrate format:dCommander_Format "Plain text only, please."
         - queue clear
 
-      - if <proc[dCommander_Homes_Get].contains[<def[Name]>].not>:
+      - if <proc[dCommander_Homes_Get].contains[<[Name]>].not>:
         - narrate format:dCommander_Format "You don't have a home by that name!"
         - queue clear
 
-      - narrate format:dCommander_Format "Removed home <proc[dCPS]><def[Name]><proc[dCPP]> from location <proc[dCFL].context[<proc[dCommander_Homes_Location].context[<player.uuid>|<def[Name]>]>|true|true|true]><proc[dCPP]>."
-      - yaml set homes.<def[Name]>:! id:dCommander_<player.uuid>
+      - narrate format:dCommander_Format "Removed home <proc[dCPS]><[Name]><proc[dCPP]> from location <proc[dCFL].context[<proc[dCommander_Homes_Location].context[<player.uuid>|<[Name]>]>|true|true|true]><proc[dCPP]>."
+      - yaml set homes.<[Name]>:! id:dCommander_<player.uuid>
 
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
@@ -101,47 +101,47 @@ dcommander_Command_Home:
   - choose <context.args.size>:
 
     - case 0:
-      - if <def[Homes].is_empty>:
+      - if <[Homes].is_empty>:
         - narrate format:dCommander_Format "You currently have no homes set!"
         - queue clear
 
-      - narrate format:dCommander_Format "Your Homes:<proc[dCPS]> <def[Homes].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
+      - narrate format:dCommander_Format "Your Homes:<proc[dCPS]> <[Homes].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
 
     - case 1:
       - define Name <context.args.get[1]>
-      - if <def[Name]> != <def[Name].escaped>:
+      - if <[Name]> != <[Name].escaped>:
         - narrate format:dCommander_Format "Plain text only, please."
         - queue clear
 
-      - if <def[Homes].contains[<def[Name]>].not>:
+      - if <[Homes].contains[<[Name]>].not>:
         - narrate format:dCommander_Format "You don't have a home by that name!"
         - queue clear
 
 
       - if <yaml[dCommander_Config].read[teleports.delay.home.enabled]||false>:
-        - define Delay <yaml[dCommander_Config].read[teleports.delay.home.amount].as_int||3>
+        - define Delay <yaml[dCommander_Config].read[teleports.delay.home.amount]||3>
         - define Location <player.location.block>
         - narrate format:dCommander_Format "Moving will cancel your teleport."
-        - repeat <def[Delay]>:
-          - if <player.location.block> != <def[Location]>:
+        - repeat <[Delay]>:
+          - if <player.location.block> != <[Location]>:
             - narrate format:dCommander_Format "Teleportation has been cancelled as you have moved!"
             - queue clear
 
           - define dLoc <yaml[dCommander_Config].read[teleports.delay.display_location]>
-          - if <def[dLoc]> == title:
-            - title "subtitle:<proc[dPC].context[You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds.]>" fade_in:0 stay:1s fade_out:0.1s
+          - if <[dLoc]> == title:
+            - title "subtitle:<proc[dPC].context[You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds.]>" fade_in:0 stay:1s fade_out:0.1s
 
-          - else if <def[dLoc]> == action_bar:
-            - adjust <player> "action_bar:<proc[dPC].context[You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds.]>"
+          - else if <[dLoc]> == action_bar:
+            - adjust <player> "action_bar:<proc[dPC].context[You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds.]>"
 
           - else:
-            - narrate format:dCommander_Format "You will be teleported in <proc[dCPS]><def[Delay].sub[<def[Value].sub[1]>]><proc[dCPP]> seconds."
+            - narrate format:dCommander_Format "You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds."
 
           - wait 1s
 
 
-      - teleport <player> <proc[dCommander_Homes_Location].context[<player.uuid>|<def[Name]>]>
-      - narrate format:dCommander_Format "You've been teleported to your home <proc[dCPS]><def[Name].to_titlecase><proc[dCPP]>."
+      - teleport <player> <proc[dCommander_Homes_Location].context[<player.uuid>|<[Name]>]>
+      - narrate format:dCommander_Format "You've been teleported to your home <proc[dCPS]><[Name].to_titlecase><proc[dCPP]>."
 
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
@@ -151,13 +151,13 @@ dCommander_Homes_Location:
   debug: false
   definitions: UUID|HomeName
   script:
-  - if <def[UUID].exists> && <def[HomeName].exists>:
-    - if <def[UUID].is_player||false>:
-      - define UUID <def[UUID].uuid>
+  - if <[UUID].exists> && <[HomeName].exists>:
+    - if <[UUID].is_player||false>:
+      - define UUID <[UUID].uuid>
 
-    - define UUID <def[UUID]||<player.uuid>>
-    - if <yaml[dCommander_<def[UUID]>].contains[homes.<def[HomeName]>]>:
-      - determine <yaml[dCommander_<def[UUID]>].read[homes.<def[HomeName]>]>
+    - define UUID <[UUID]||<player.uuid>>
+    - if <yaml[dCommander_<[UUID]>].contains[homes.<[HomeName]>]>:
+      - determine <yaml[dCommander_<[UUID]>].read[homes.<[HomeName]>]>
 
 
   - determine "Unknown Location"
@@ -167,13 +167,13 @@ dCommander_Homes_Get:
   debug: false
   definitions: UUID
   script:
-  - if <def[UUID].exists>:
-    - if <def[UUID].is_player||false>:
-      - define UUID <def[UUID].uuid>
+  - if <[UUID].exists>:
+    - if <[UUID].is_player||false>:
+      - define UUID <[UUID].uuid>
 
 
-  - define UUID <def[UUID]||<player.uuid>>
-  - determine <yaml[dCommander_<def[UUID]>].list_keys[Homes].parse[to_titlecase]||li@>
+  - define UUID <[UUID]||<player.uuid>>
+  - determine <yaml[dCommander_<[UUID]>].list_keys[Homes].parse[to_titlecase]||li@>
 
 
 dCommander_Homes_Get_Max:
@@ -181,14 +181,14 @@ dCommander_Homes_Get_Max:
   debug: false
   definitions: Player
   script:
-  - if <def[Player].exists.not> && <player.is_online||false>:
+  - if <[Player].exists.not> && <player.is_online||false>:
     - define Player <player>
 
-  - define Player <def[Player]||<player>>
+  - define Player <[Player]||<player>>
   - define Maxes li@1
   - foreach <yaml[dCommander_Config].list_keys[homes.limit]||li@>:
-    - if <def[Player].has_permission[dcommander.homes.limit.<def[Value]>]>:
-      - define Maxes <def[Maxes].include[<yaml[dCommander_Config].read[homes.limit.<def[Value]>]>]>
+    - if <[Player].has_permission[dcommander.homes.limit.<[Value]>]>:
+      - define Maxes <[Maxes].include[<yaml[dCommander_Config].read[homes.limit.<[Value]>]>]>
 
 
-  - determine <def[Maxes].numerical.last>
+  - determine <[Maxes].numerical.last>

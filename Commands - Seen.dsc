@@ -20,24 +20,24 @@ dCommander_Command_Seen:
 
     - case 1:
       - define Target <server.match_offline_player[<context.args.get[1]>]||null>
-      - if <def[Target]> == null:
+      - if <[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
         - queue clear
 
       - define Admin <player.has_permission[dcommander.command.seen.admin]||<context.server>>
-      - narrate format:dCommander_Format "Last seen of player:<proc[dCPS]> <def[Target].name>"
-      - if <def[Admin]>:
-        - narrate format:dCommander_Col_Format "IP Address:<proc[dCPS]> <yaml[dCommander_<def[Target].uuid>].read[seen.ips].last||Unknown>"
+      - narrate format:dCommander_Format "Last seen of player:<proc[dCPS]> <[Target].name>"
+      - if <[Admin]>:
+        - narrate format:dCommander_Col_Format "IP Address:<proc[dCPS]> <yaml[dCommander_<[Target].uuid>].read[seen.ips].last||Unknown>"
 
-      - narrate format:dCommander_Col_Format "Last Online:<proc[dCPS]> <t[<def[Target].is_online>]:Now||<def[Target].last_played.time>>"
-      - narrate format:dCommander_Col_Format "Health:<proc[dCPS]> <t[<def[Target].health.is[==].to[0]>]:Dead!||<def[Target].health><proc[dCPP]>/<proc[dCPS]><def[Target].health.max>>"
-      - narrate format:dCommander_Col_Format "Banned:<proc[dCPS]> <def[Target].is_banned>"
-      - if <def[Admin]>:
-        - if <def[Target].is_banned>:
-          - narrate format:dCommander_Col_Format "&f      When:<proc[dCPS]> <def[Target].ban_info.created.time>"
-          - narrate format:dCommander_Col_Format "&f       Why:<proc[dCPS]> <def[Target].ban_info.reason>"
-          - define Expiry <def[Target].ban_info.expiration>
-          - narrate format:dCommander_Col_Format "&f    Expiry:<proc[dCPS]> <t[<def[Expiry].in_seconds.is[==].to[0]>]:Never||<def[Expiry].time>>"
+      - narrate format:dCommander_Col_Format "Last Online:<proc[dCPS]> <tern[<[Target].is_online>]:Now||<[Target].last_played.time>>"
+      - narrate format:dCommander_Col_Format "Health:<proc[dCPS]> <tern[<[Target].health.is[==].to[0]>]:Dead!||<[Target].health><proc[dCPP]>/<proc[dCPS]><[Target].health.max>>"
+      - narrate format:dCommander_Col_Format "Banned:<proc[dCPS]> <[Target].is_banned>"
+      - if <[Admin]>:
+        - if <[Target].is_banned>:
+          - narrate format:dCommander_Col_Format "&f      When:<proc[dCPS]> <[Target].ban_info.created.time>"
+          - narrate format:dCommander_Col_Format "&f       Why:<proc[dCPS]> <[Target].ban_info.reason>"
+          - define Expiry <[Target].ban_info.expiration>
+          - narrate format:dCommander_Col_Format "&f    Expiry:<proc[dCPS]> <tern[<[Expiry].in_seconds.is[==].to[0]>]:Never||<[Expiry].time>>"
 
 
 
@@ -64,13 +64,13 @@ dCommander_Command_NameHistory:
   - choose <context.args.size>:
     - case 1:
       - define Target <server.match_offline_player[<context.args.get[1]>]||null>
-      - if <def[Target]> == null:
+      - if <[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
         - queue clear
 
 
-      - define Names <yaml[dCommander_<def[Target].uuid>].read[seen.names]>
-      - narrate format:dCommander_Format "Known names of: <def[Target].name>"
-      - foreach <def[Names]>:
+      - define Names <yaml[dCommander_<[Target].uuid>].read[seen.names]>
+      - narrate format:dCommander_Format "Known names of: <[Target].name>"
+      - foreach <[Names]>:
         - narrate ""
 

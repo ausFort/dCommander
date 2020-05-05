@@ -23,7 +23,7 @@ dCommander_Command_dCommander:
 
       ## Information ##
       - case info:
-        - narrate format:dCommander_Format "dCommander Version <proc[dCPS]>0.7<proc[dCPP]>. Made by <proc[dCPS]>Fortifier<proc[dCPP]>."
+        - narrate format:dCommander_Format "dCommander Version <proc[dCPS]>0.8<proc[dCPP]>. Made by <proc[dCPS]>Fortifier<proc[dCPP]>."
 
       ## Help ##
       - default:
@@ -86,27 +86,27 @@ dCommander_Initialise_Players:
       - else if <yaml.list.contains[dCommander_<player.uuid>].not>:
         - yaml load:/dCommander/saves/<player.uuid>.yml id:dCommander_<player.uuid>
         - define IP <player.ip.address.after[/].before[:]>
-        - if <yaml[dCommander_<player.uuid>].read[seen.ips].contains[<def[IP]>].not||true>:
-          - yaml set seen.ips:->:<def[IP]> id:dCommander_<player.uuid>
+        - if <yaml[dCommander_<player.uuid>].read[seen.ips].contains[<[IP]>].not||true>:
+          - yaml set seen.ips:->:<[IP]> id:dCommander_<player.uuid>
         - define Name <player.name>
-        - if <yaml[dCommander_<player.uuid>].read[seen.names].contains[<def[Name]>].not||true>:
-          - yaml set seen.names:->:<def[Name]> id:dCommander_<player.uuid>
+        - if <yaml[dCommander_<player.uuid>].read[seen.names].contains[<[Name]>].not||true>:
+          - yaml set seen.names:->:<[Name]> id:dCommander_<player.uuid>
         - if <yaml[dCommander_Config].read[messages.join.enabled]||false>:
           - define Name <player.name>
           - if <yaml[dCommander_Config].contains[messages.join.message].not>:
             - queue clear
-          - determine <yaml[dCommander_Config].read[messages.join.message].parse_color.replace[<&pc>name<&pc>].with[<def[Name]>]>
+          - determine <yaml[dCommander_Config].read[messages.join.message].parse_color.replace[<&pc>name<&pc>].with[<[Name]>]>
 
 dCommander_Players_Save:
   type: task
   debug: false
   script:
     - foreach <server.list_players>:
-      - if <server.has_file[/dCommander/saves/<def[Value].uuid>.yml].not>:
-        - yaml create id:dCommander_<def[Value].uuid>
-      - else if <yaml.list.contains[dCommander_<def[Value].uuid>].not>:
-        - yaml load:/dCommander/saves/<def[Value].uuid>.yml id:dCommander_<def[Value].uuid>
-      - yaml savefile:/dCommander/saves/<def[Value].uuid>.yml id:dCommander_<def[Value].uuid>
+      - if <server.has_file[/dCommander/saves/<[Value].uuid>.yml].not>:
+        - yaml create id:dCommander_<[Value].uuid>
+      - else if <yaml.list.contains[dCommander_<[Value].uuid>].not>:
+        - yaml load:/dCommander/saves/<[Value].uuid>.yml id:dCommander_<[Value].uuid>
+      - yaml savefile:/dCommander/saves/<[Value].uuid>.yml id:dCommander_<[Value].uuid>
     - run <script> delay:15s instantly
 
 dCommander_Warps_Save:
@@ -136,7 +136,7 @@ dPC:
   type: procedure
   debug: false
   script:
-  - determine <def[1].parse_color>
+  - determine <[1].parse_color>
 
 dCPP:
   type: procedure
@@ -155,23 +155,23 @@ dCFL:
   debug: false
   definitions: dLoc|Simple|Colored|With_World
   script:
-  - if <li@true|false.contains[<def[Colored]||null>].not>:
+  - if <li@true|false.contains[<[Colored]||null>].not>:
     - define Colored false
-  - if <li@true|false.contains[<def[With_World]||null>].not>:
+  - if <li@true|false.contains[<[With_World]||null>].not>:
     - define With_World true
-  - if <def[Simple]>:
-    - define X "<t[<def[Colored]>]:<proc[dCPS]><def[dLoc].x.round><proc[dCPP]>||<def[dLoc].x.round>>"
-    - define Y "<t[<def[Colored]>]:<proc[dCPS]><def[dLoc].y.round><proc[dCPP]>||<def[dLoc].y.round>>"
-    - define Z "<t[<def[Colored]>]:<proc[dCPS]><def[dLoc].z.round><proc[dCPP]>||<def[dLoc].z.round>>"
+  - if <[Simple]>:
+    - define X "<tern[<[Colored]>]:<proc[dCPS]><[dLoc].x.round><proc[dCPP]>||<[dLoc].x.round>>"
+    - define Y "<tern[<[Colored]>]:<proc[dCPS]><[dLoc].y.round><proc[dCPP]>||<[dLoc].y.round>>"
+    - define Z "<tern[<[Colored]>]:<proc[dCPS]><[dLoc].z.round><proc[dCPP]>||<[dLoc].z.round>>"
   - else:
-    - define X "<t[<def[Colored]>]:<proc[dCPS]><def[dLoc].x><proc[dCPP]>||<def[dLoc].x>>"
-    - define Y "<t[<def[Colored]>]:<proc[dCPS]><def[dLoc].y><proc[dCPP]>||<def[dLoc].y>>"
-    - define Z "<t[<def[Colored]>]:<proc[dCPS]><def[dLoc].z><proc[dCPP]>||<def[dLoc].z>>"
+    - define X "<tern[<[Colored]>]:<proc[dCPS]><[dLoc].x><proc[dCPP]>||<[dLoc].x>>"
+    - define Y "<tern[<[Colored]>]:<proc[dCPS]><[dLoc].y><proc[dCPP]>||<[dLoc].y>>"
+    - define Z "<tern[<[Colored]>]:<proc[dCPS]><[dLoc].z><proc[dCPP]>||<[dLoc].z>>"
   - define World ""
-  - if <def[With_World]>:
-    - define World ", <t[<def[Colored]>]:<proc[dCPS]><def[dLoc].world.name>||<def[dLoc].world.name>>"
-  - define dLoc "<def[X]>, <def[Y]>, <def[Z]><def[World]>&r"
-  - determine <def[dLoc].parse_color>
+  - if <[With_World]>:
+    - define World ", <tern[<[Colored]>]:<proc[dCPS]><[dLoc].world.name>||<[dLoc].world.name>>"
+  - define dLoc "<[X]>, <[Y]>, <[Z]><[World]>&r"
+  - determine <[dLoc].parse_color>
 
 dCommander_Require_Ingame_Handler:
   type: task

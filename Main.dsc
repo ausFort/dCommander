@@ -18,7 +18,7 @@ dCommander_Command_dCommander:
           - else:
             - yaml load:/dCommander/config.yml id:dCommander_Config
           - narrate format:dCommander_Format "Reloaded dCommander!"
-          - queue clear
+          - stop
         - narrate format:dCommander_Format "Usage: <proc[dCPS]>/dCommander <&lt>info<&gt>"
 
       ## Information ##
@@ -94,7 +94,7 @@ dCommander_Initialise_Players:
         - if <yaml[dCommander_Config].read[messages.join.enabled]||false>:
           - define Name <player.name>
           - if <yaml[dCommander_Config].contains[messages.join.message].not>:
-            - queue clear
+            - stop
           - determine <yaml[dCommander_Config].read[messages.join.message].parse_color.replace[<&pc>name<&pc>].with[<[Name]>]>
 
 dCommander_Players_Save:
@@ -179,7 +179,7 @@ dCommander_Require_Ingame_Handler:
   script:
   - if <context.server>:
     - narrate format:dCommander_Format "You must be ingame to use this command!"
-    - queue clear
+    - stop
 
 dCommander_Require_Player_Handler:
   type: task
@@ -187,4 +187,4 @@ dCommander_Require_Player_Handler:
   script:
   - if <context.server>:
     - narrate format:dCommander_Format "You must specify a player when in console!"
-    - queue clear
+    - stop

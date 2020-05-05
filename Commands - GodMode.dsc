@@ -16,35 +16,35 @@ dCommander_Command_Godmode:
     - case 0:
       - if <context.server>:
         - narrate format:dCommander_Format "You must specify a player when in console!"
-        - queue clear
+        - stop
 
       - define Mode Toggle
       - define Target <player>
     - case 1:
       - if <context.server>:
         - narrate format:dCommander_Format "You must specify a player when in console!"
-        - queue clear
+        - stop
 
       - define Mode <[Valid].filter[starts_with[<context.args.get[1]>]].get[1]||null>
       - if <[Mode]> == null:
         - narrate format:dCommander_Format "Invalid mode! Valid modes are: <proc[dCPS]><[Valid].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
-        - queue clear
+        - stop
 
       - define Target <player>
     - case 2:
       - define Mode <[Valid].filter[starts_with[<context.args.get[1]>]].get[1]||null>
       - if <[Mode]> == null:
         - narrate format:dCommander_Format "Invalid mode! Valid modes are: <proc[dCPS]><[Valid].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
-        - queue clear
+        - stop
 
       - define Target <server.match_player[<context.args.get[2]>]||null>
       - if <[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
-        - queue clear
+        - stop
 
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> /fly (on/off/{toggle) (player)"
-      - queue clear
+      - stop
 
   - choose <[Mode]>:
     - case On:
@@ -63,7 +63,7 @@ dCommander_Command_Godmode:
   - define Enabled <tern[<[Target].has_flag[dCommander.GodMode]>]:Enabled||Disabled>
   - if <[Target]> == <player||null>:
     - narrate format:dCommander_Format "Your god mode has been <proc[dCPS]><[Enabled]><proc[dCPP]>."
-    - queue clear
+    - stop
 
   - narrate format:dCommander_Format "God mode has been <proc[dCPS]><[Enabled]><proc[dCPP]> for player <proc[dCPS]><[Target].name><proc[dCPP]>."
   - narrate format:dCommander_Format "Your god mode has been <proc[dCPS]><[Enabled]><proc[dCPP]> by <proc[dCPS]><player.name||Console><proc[dCPP]>." targets:<[Target]>

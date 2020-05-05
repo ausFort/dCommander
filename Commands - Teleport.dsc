@@ -30,11 +30,11 @@ dCommander_Command_Spawn:
       - define Target <server.match_player[<context.args.get[1]>]||null>
       - if <[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
-        - queue clear
+        - stop
 
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
-      - queue clear
+      - stop
 
   - if <yaml[dCommander_Config].read[teleports.delay.spawn.enabled]||false>:
     - define Delay <yaml[dCommander_Config].read[teleports.delay.spawn.amount]||3>
@@ -43,7 +43,7 @@ dCommander_Command_Spawn:
     - repeat <[Delay]>:
       - if <player.location.block> != <[Location]>:
         - narrate format:dCommander_Format "Teleportation has been cancelled as you have moved!"
-        - queue clear
+        - stop
 
       - define dLoc <yaml[dCommander_Config].read[teleports.delay.display_location]>
       - if <[dLoc]> == title:
@@ -61,7 +61,7 @@ dCommander_Command_Spawn:
   - teleport <[Target]> <[Target].world.spawn_location.add[0,1,0]>
   - if <[Target]> == <player>:
     - narrate format:dCommander_Format "You have been teleported to spawn!"
-    - queue clear
+    - stop
 
   - narrate format:dCommander_Format "<proc[dCPS]><[Target].name><proc[dCPP]> has been teleported to spawn."
   - narrate format:dCommander_Format "<proc[dCPS]><player.name||console><proc[dCPP]> has teleported you to spawn." targets:<[Target]>
@@ -86,27 +86,27 @@ dCommander_Command_Teleport:
       - define Destination <server.match_offline_player[<context.args.get[1]>]||null>
       - if <[Destination]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
-        - queue clear
+        - stop
 
       - define Target <player>
     - case 2:
       - define Target <server.match_player[<context.args.get[1]>]||null>
       - if <[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
-        - queue clear
+        - stop
 
       - define Destination <server.match_offline_player[<context.args.get[2]>]||null>
       - if <[Destination]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
-        - queue clear
+        - stop
 
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
-      - queue clear
+      - stop
 
   - if <[Target]> == <[Destination]>:
     - narrate format:dCommander_Format "Cannot teleport a player to themself!"
-    - queue clear
+    - stop
 
   - if <yaml[dCommander_Config].read[teleports.delay.teleport.enabled]||false>:
     - define Delay <yaml[dCommander_Config].read[teleports.delay.teleport.amount]||3>
@@ -115,7 +115,7 @@ dCommander_Command_Teleport:
     - repeat <[Delay]>:
       - if <player.location.block> != <[Location]>:
         - narrate format:dCommander_Format "Teleportation has been cancelled as you have moved!"
-        - queue clear
+        - stop
 
       - title "subtitle:<proc[dPC].context[You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds.]>" fade_in:0 stay:1s fade_out:0.1s
       - wait 1s
@@ -151,11 +151,11 @@ dCommander_Command_Teleport_Here:
       - define Target <server.match_player[<context.args.get[1]>]||null>
       - if <[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
-        - queue clear
+        - stop
 
       - if <[Target]> == <player>:
         - narrate format:dCommander_Format "You cannot teleport yourself to yourself!"
-        - queue clear
+        - stop
 
       - teleport <[Target]> <player.location>
       - narrate format:dCommander_Format "<proc[dCPS]><[Target].name><proc[dCPP]> has been teleported to you!"
@@ -197,7 +197,7 @@ dCommander_Command_Teleport_pos:
         - define Error true
 
       - if <[Error]>:
-        - queue clear
+        - stop
 
       - define Location <location[<context.args.get[1]>,<context.args.get[2]>,<context.args.get[3]>,<player.world.name>]>
       - teleport <player> <[Location]>

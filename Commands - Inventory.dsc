@@ -18,11 +18,11 @@ dCommand_Command_InventorySee:
       - define Target <server.match_offline_player[<context.args.get[1]>]||null>
       - if <[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
-        - queue clear
+        - stop
 
       - else if <[Target]> == <player>:
         - narrate format:dCommander_Format "Why are you trying to peek at your own inventory?"
-        - queue clear
+        - stop
 
       - narrate format:dCommander_Format "Opening inventory of <proc[dCPS]><[Target].name><proc[dCPP]>."
       - inventory open d:<[Target].inventory>
@@ -48,7 +48,7 @@ dCommander_Command_EnderSee:
       - define Target <server.match_offline_player[<context.args.get[1]>]||null>
       - if <[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
-        - queue clear
+        - stop
 
       - narrate format:dCommander_Format "Opening enderchest of <proc[dCPS]><[Target].name><proc[dCPP]>."
       - inventory open d:<[Target].enderchest>
@@ -77,16 +77,16 @@ dCommander_Command_ClearInventory:
       - define Target <server.match_player[<context.args.get[1]>]||null>
       - if <[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
-        - queue clear
+        - stop
 
     - default:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
-      - queue clear
+      - stop
 
   - inventory clear d:<[Target].inventory>
   - if <[Target]> == <player>:
     - narrate format:dCommander_Format "Cleared your inventory."
-    - queue clear
+    - stop
 
   - narrate format:dCommander_Format "Cleared the inventory of <proc[dCPS]><[Target].name><proc[dCPP]>."
   - narrate format:dCommander_Format "Your inventory has been cleared." targets:<[Target]>

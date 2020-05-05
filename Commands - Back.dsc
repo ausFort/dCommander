@@ -19,7 +19,7 @@ dCommander_Command_Back:
   - define Locations <yaml[dCommander_<player.uuid>].read[back_locations]||li@>
   - if <[Locations].is_empty>:
     - narrate format:dCommander_Format "You have not been teleported recently!"
-    - queue clear
+    - stop
 
   - define BackLoc <[Locations].last>
   - if <yaml[dCommander_Config].read[teleports.delay.back.enabled]||false>:
@@ -29,7 +29,7 @@ dCommander_Command_Back:
     - repeat <[Delay]>:
       - if <player.location.block> != <[Location]>:
         - narrate format:dCommander_Format "Teleportation has been cancelled as you have moved!"
-        - queue clear
+        - stop
 
       - define dLoc <yaml[dCommander_Config].read[teleports.delay.display_location]>
       - if <[dLoc]> == title:
@@ -56,7 +56,7 @@ dCommander_Back_Saves:
   - wait 1t
   - if <player.has_flag[dCommander_Back]>:
     - flag <player> dCommander_Back:!
-    - queue clear
+    - stop
 
   - define Current <yaml[dCommander_<player.uuid>].read[back_locations]||li@>
   - if <[Current].size> >= <yaml[dCommander_Config].read[teleports.back.limit]>:

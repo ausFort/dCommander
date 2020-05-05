@@ -19,7 +19,7 @@ dcommander_Command_SetHome:
       - define Name <context.args.get[1]>
       - if <[Name]> != <[Name].escaped>:
         - narrate format:dCommander_Format "Plain text only, please."
-        - queue clear
+        - stop
 
       - define Max <proc[dCommander_Homes_Get_Max].context[<player>]>
       - if <[Max]> != -1 && <proc[dCommander_Homes_Get].size> == <[Max]> && <player.has_permission[dCommander.homes.unlimited].not>:
@@ -63,11 +63,11 @@ dCommander_Command_DeleteHome:
       - define Name <context.args.get[1]>
       - if <[Name]> != <[Name].escaped>:
         - narrate format:dCommander_Format "Plain text only, please."
-        - queue clear
+        - stop
 
       - if <proc[dCommander_Homes_Get].contains[<[Name]>].not>:
         - narrate format:dCommander_Format "You don't have a home by that name!"
-        - queue clear
+        - stop
 
       - narrate format:dCommander_Format "Removed home <proc[dCPS]><[Name]><proc[dCPP]> from location <proc[dCFL].context[<proc[dCommander_Homes_Location].context[<player.uuid>|<[Name]>]>|true|true|true]><proc[dCPP]>."
       - yaml set homes.<[Name]>:! id:dCommander_<player.uuid>
@@ -103,7 +103,7 @@ dcommander_Command_Home:
     - case 0:
       - if <[Homes].is_empty>:
         - narrate format:dCommander_Format "You currently have no homes set!"
-        - queue clear
+        - stop
 
       - narrate format:dCommander_Format "Your Homes:<proc[dCPS]> <[Homes].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
 
@@ -111,11 +111,11 @@ dcommander_Command_Home:
       - define Name <context.args.get[1]>
       - if <[Name]> != <[Name].escaped>:
         - narrate format:dCommander_Format "Plain text only, please."
-        - queue clear
+        - stop
 
       - if <[Homes].contains[<[Name]>].not>:
         - narrate format:dCommander_Format "You don't have a home by that name!"
-        - queue clear
+        - stop
 
 
       - if <yaml[dCommander_Config].read[teleports.delay.home.enabled]||false>:
@@ -125,7 +125,7 @@ dcommander_Command_Home:
         - repeat <[Delay]>:
           - if <player.location.block> != <[Location]>:
             - narrate format:dCommander_Format "Teleportation has been cancelled as you have moved!"
-            - queue clear
+            - stop
 
           - define dLoc <yaml[dCommander_Config].read[teleports.delay.display_location]>
           - if <[dLoc]> == title:

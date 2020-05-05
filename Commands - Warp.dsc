@@ -14,7 +14,7 @@ dCommander_Command_SetWarp:
       - define Name <context.args.get[1]>
       - if <[Name]> != <[Name].escaped>:
         - narrate format:dCommander_Format "Plain text only, please."
-        - queue clear
+        - stop
 
       - if <yaml[dCommander_Warps].contains[<[Name]>]>:
         - narrate format:dCommander_Format "Overwriting existing warp at <proc[dCFL].context[<proc[dCommander_Warps_Location].context[<[Name]>]>|true|true|true]><proc[dCPP]>."
@@ -45,11 +45,11 @@ dCommander_Command_DeleteWarp:
       - define Name <context.args.get[1]>
       - if <[Name]> != <[Name].escaped>:
         - narrate format:dCommander_Format "Plain text only, please."
-        - queue clear
+        - stop
 
       - if <yaml[dCommander_Warps].contains[<[Name]>].not>:
         - narrate format:dCommander_Format "No warp exists with the given name."
-        - queue clear
+        - stop
 
       - narrate format:dCommander_Format "Removed warp <proc[dCPS]><[Name]><proc[dCPP]> from <proc[dCFL].context[<proc[dCommander_Warps_Location].context[<[Name]>]>|true|true|true]><proc[dCPP]>."
       - yaml set <[Name]>:! id:dCommander_Warps
@@ -78,18 +78,18 @@ dCommander_Command_Warp:
     - case 0:
       - if <[Warps].is_empty>:
         - narrate format:dCommander_Format "You currently have no warps available to you!"
-        - queue clear
+        - stop
 
       - narrate format:dCommander_Format "Available Warps:<proc[dCPS]> <[Warps].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
     - case 1:
       - define Target <context.args.get[1]>
       - if <[Target]> != <[Target].escaped>:
         - narrate format:dCommander_Format "Plain text only, please."
-        - queue clear
+        - stop
 
       - if <[Warps].contains[<[Target]>].not>:
         - narrate format:dCommander_Format "No warp exists with the given name or you do not have permission for that warp."
-        - queue clear
+        - stop
 
       - if <yaml[dCommander_Config].read[teleports.delay.warp.enabled]||false>:
         - define Delay <yaml[dCommander_Config].read[teleports.delay.warp.amount]||3>
@@ -98,7 +98,7 @@ dCommander_Command_Warp:
         - repeat <[Delay]>:
           - if <player.location.block> != <[Location]>:
             - narrate format:dCommander_Format "Teleportation has been cancelled as you have moved!"
-            - queue clear
+            - stop
 
           - define dLoc <yaml[dCommander_Config].read[teleports.delay.display_location]>
           - if <[dLoc]> == title:

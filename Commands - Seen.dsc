@@ -22,7 +22,7 @@ dCommander_Command_Seen:
       - define Target <server.match_offline_player[<context.args.get[1]>]||null>
       - if <[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
-        - queue clear
+        - stop
 
       - define Admin <player.has_permission[dcommander.command.seen.admin]||<context.server>>
       - narrate format:dCommander_Format "Last seen of player:<proc[dCPS]> <[Target].name>"
@@ -66,7 +66,7 @@ dCommander_Command_NameHistory:
       - define Target <server.match_offline_player[<context.args.get[1]>]||null>
       - if <[Target]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
-        - queue clear
+        - stop
 
 
       - define Names <yaml[dCommander_<[Target].uuid>].read[seen.names]>

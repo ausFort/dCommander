@@ -1,7 +1,7 @@
 dCommander_Utility_Chat_Color:
   type: world
   events:
-    on player chat:
+    on player chats:
     - if <player.has_permission[dcommander.utility.chatcolor]> || <pl.is_op>:
       - determine <context.message.parse_color>
 

@@ -12,7 +12,7 @@ dCommand_Command_InventorySee:
   description: See another player's inventory.
   permission: dcommander.command.inventorysee
   script:
-  - inject s@dCommander_Require_Ingame_Handler
+  - inject dCommander_Require_Ingame_Handler
   - choose <context.args.size>:
     - case 1:
       - define Target <server.match_offline_player[<context.args.get[1]>]||null>
@@ -27,7 +27,7 @@ dCommand_Command_InventorySee:
       - narrate format:dCommander_Format "Opening inventory of <proc[dCPS]><[Target].name><proc[dCPP]>."
       - inventory open d:<[Target].inventory>
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 dCommander_Command_EnderSee:
   type: command
@@ -42,7 +42,7 @@ dCommander_Command_EnderSee:
   description: See a player's ender chest.
   permission: dcommander.command.endersee
   script:
-  - inject s@dCommander_Require_Ingame_Handler
+  - inject dCommander_Require_Ingame_Handler
   - choose <context.args.size>:
     - case 1:
       - define Target <server.match_offline_player[<context.args.get[1]>]||null>
@@ -53,7 +53,7 @@ dCommander_Command_EnderSee:
       - narrate format:dCommander_Format "Opening enderchest of <proc[dCPS]><[Target].name><proc[dCPP]>."
       - inventory open d:<[Target].enderchest>
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 dCommander_Command_ClearInventory:
   type: command
@@ -71,7 +71,7 @@ dCommander_Command_ClearInventory:
   script:
   - choose <context.args.size>:
     - case 0:
-      - inject s@dCommander_Require_Player_Handler
+      - inject dCommander_Require_Player_Handler
       - define Target <player>
     - case 1:
       - define Target <server.match_player[<context.args.get[1]>]||null>
@@ -80,7 +80,7 @@ dCommander_Command_ClearInventory:
         - stop
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
       - stop
 
   - inventory clear d:<[Target].inventory>

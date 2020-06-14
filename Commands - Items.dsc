@@ -17,14 +17,14 @@ dCommander_Command_Item:
     - case 1:
       - determine <[ItemList].filter[contains[<context.args.last>]]>
   script:
-  - inject s@dCommander_Require_Ingame_Handler
+  - inject dCommander_Require_Ingame_Handler
   - choose <context.args.size>:
     - case 0:
       - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
       - stop
 
     - default:
-      - define Item <context.args.get[1].as_item||null>
+      - define Item <item[<context.args.get[1]>]||null>
       - if <[Item]> == null:
         - narrate format:dCommander_Format "Sorry, that item cannot be found!"
         - stop
@@ -59,17 +59,17 @@ dCommander_Command_Enchant:
   description: Enchant the item in your hand.
   permission: dcommander.command.enchant
   script:
-  - define valid <server.list_enchantments>
+  - define valid <server.list_enchantments.parse[to_titlecase]>
   - choose <context.args.size>:
     - case 0:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
     - default:
       - if <context.args.get[1]> == list:
         - narrate format:dCommander_Format "Valid enchantments are:<proc[dCPS]> <[valid].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
         - stop
 
-      - inject s@dCommander_Require_Ingame_Handler
+      - inject dCommander_Require_Ingame_Handler
       - define Item <player.item_in_hand>
       - if <[Item].material.name> == air:
         - narrate format:dCommander_Format "You cannot enchant air!"
@@ -83,16 +83,15 @@ dCommander_Command_Enchant:
           - stop
 
         - define Level <[Value].after[:]||null>
-        - if <[Level]> == "":
+        - if <[Level]> == <empty>:
           - define Level 1
 
-        - if <[Level]> == null || <[Level]> !matches number || <[Level]> <= 0:
+        - if <[Level]> == null || !<[Level].is_integer> || <[Level]> <= 0:
           - narrate format:dCommander_Format "Enchantment level must be atleast 1! @<proc[dCPS]><[Enchantment].to_uppercase><proc[dCPP]>."
           - stop
 
         - define Enchantments <[Enchantments].set[<[Enchantment]>,<[Level]>].at[<[Loop_Index]>]>
 
-      - adjust <[Item]> enchantments:<[Enchantments]> save:item
-      - inventory set o:<entry[item].result> d:<player.inventory> slot:<player.item_in_hand.slot>
-      - define Enchantments <entry[item].result.enchantments.with_levels>
-      - narrate format:dCommander_Format "Your <proc[dCPS]><[Item].material.name><proc[dCPP]> is now enchanted with <proc[dCPS]><[Enchantments].replace[,].with[<proc[dCPP]>:<proc[dCPS]>].as_list.separated_by[<proc[dCPP]> + <proc[dCPS]>]><proc[dCPP]>."
+      - inventory adjust d:<player.inventory> slot:<player.item_in_hand.slot> enchantments:<[Enchantments]>
+      - define Enchantments <player.item_in_hand.enchantments.with_levels>
+      - narrate format:dCommander_Format "Your <proc[dCPS]><[Item].material.name><proc[dCPP]> is now enchanted with <proc[dCPS]><[Enchantments].replace[,].with[<proc[dCPP]>:<proc[dCPS]>].separated_by[<proc[dCPP]> + <proc[dCPS]>]><proc[dCPP]>."

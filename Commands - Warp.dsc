@@ -8,7 +8,7 @@ dCommander_Command_SetWarp:
   description: Set a warp to your current location.
   permission: dcommander.command.setwarp
   script:
-  - inject s@dCommander_Require_Ingame_Handler
+  - inject dCommander_Require_Ingame_Handler
   - choose <context.args.size>:
     - case 1:
       - define Name <context.args.get[1]>
@@ -19,10 +19,10 @@ dCommander_Command_SetWarp:
       - if <yaml[dCommander_Warps].contains[<[Name]>]>:
         - narrate format:dCommander_Format "Overwriting existing warp at <proc[dCFL].context[<proc[dCommander_Warps_Location].context[<[Name]>]>|true|true|true]><proc[dCPP]>."
 
-      - run s@dCommander_Warps_Set def:<[Name]>|<player.location.block>|<player> instantly
+      - run dCommander_Warps_Set def:<[Name]>|<player.location.block>|<player> instantly
       - narrate format:dCommander_Format "Warp <proc[dCPS]><[Name]><proc[dCPP]> created at <proc[dCFL].context[<proc[dCommander_Warps_Location].context[<[Name]>]>|true|true|true]><proc[dCPP]>."
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 dCommander_Command_DeleteWarp:
   type: command
@@ -54,7 +54,7 @@ dCommander_Command_DeleteWarp:
       - narrate format:dCommander_Format "Removed warp <proc[dCPS]><[Name]><proc[dCPP]> from <proc[dCFL].context[<proc[dCommander_Warps_Location].context[<[Name]>]>|true|true|true]><proc[dCPP]>."
       - yaml set <[Name]>:! id:dCommander_Warps
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 dCommander_Command_Warp:
   type: command
@@ -72,7 +72,7 @@ dCommander_Command_Warp:
       - determine <proc[dCommander_Warps_Get].filter[starts_with[<context.args.last>]]>
   permission: dcommander.command.warp
   script:
-  - inject s@dCommander_Require_Ingame_Handler
+  - inject dCommander_Require_Ingame_Handler
   - define Warps <proc[dCommander_Warps_Get]>
   - choose <context.args.size>:
     - case 0:
@@ -105,7 +105,7 @@ dCommander_Command_Warp:
             - title "subtitle:<proc[dPC].context[You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds.]>" fade_in:0 stay:1s fade_out:0.1s
 
           - else if <[dLoc]> == action_bar:
-            - adjust <player> "action_bar:<proc[dPC].context[You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds.]>"
+            - actionbar "<proc[dPC].context[You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds.]>"
 
           - else:
             - narrate format:dCommander_Format "You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds."
@@ -116,7 +116,7 @@ dCommander_Command_Warp:
       - teleport <player> <proc[dCommander_Warps_Location].context[<[Target]>]>
       - narrate format:dCommander_Format "You have been warped to <proc[dCPS]><[Target].to_titlecase><proc[dCPP]>."
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 dCommander_Warps_Location:
   type: procedure
@@ -143,13 +143,12 @@ dCommander_Warps_Get:
   debug: false
   definitions: All
   script:
-  - if <[All]||false> || "<yaml[dCommander_Config].read[warps.per_warp_permissions].not||true>":
+  - if <[All]||false> || <yaml[dCommander_Config].read[warps.per_warp_permissions].not||true>:
     - determine <yaml[dCommander_Warps].list_keys[].parse[to_titlecase]>
 
-  - define Warps li@
+  - define Warps <list[]>
   - foreach <yaml[dCommander_Warps].list_keys[]>:
     - if <player.has_permission[dcommander.command.warp.<[Value]>]>:
       - define Warps <[Warps].include[<[Value].to_titlecase>]>
-
 
   - determine <[Warps]>

@@ -11,7 +11,7 @@ dcommander_Command_SetHome:
 
   permission: dcommander.command.sethome
   script:
-  - inject s@dCommander_Require_Ingame_Handler
+  - inject dCommander_Require_Ingame_Handler
 
   - choose <context.args.size>:
 
@@ -32,7 +32,7 @@ dcommander_Command_SetHome:
       - narrate format:dCommander_Format "New home <proc[dCPS]><[Name].to_titlecase><proc[dCPP]> set at <proc[dCFL].context[<player.location.block>|true|true|true]><proc[dCPP]>."
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 
 dCommander_Command_DeleteHome:
@@ -55,7 +55,7 @@ dCommander_Command_DeleteHome:
 
   permission: dcommander.command.delhome
   script:
-  - inject s@dCommander_Require_Ingame_Handler
+  - inject dCommander_Require_Ingame_Handler
 
   - choose <context.args.size>:
 
@@ -73,7 +73,7 @@ dCommander_Command_DeleteHome:
       - yaml set homes.<[Name]>:! id:dCommander_<player.uuid>
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 dcommander_Command_Home:
   type: command
@@ -95,7 +95,7 @@ dcommander_Command_Home:
 
   permission: dcommander.command.home
   script:
-  - inject s@dCommander_Require_Ingame_Handler
+  - inject dCommander_Require_Ingame_Handler
 
   - define Homes <proc[dCommander_Homes_Get]>
   - choose <context.args.size>:
@@ -132,7 +132,7 @@ dcommander_Command_Home:
             - title "subtitle:<proc[dPC].context[You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds.]>" fade_in:0 stay:1s fade_out:0.1s
 
           - else if <[dLoc]> == action_bar:
-            - adjust <player> "action_bar:<proc[dPC].context[You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds.]>"
+            - actionbar "<proc[dPC].context[You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds.]>"
 
           - else:
             - narrate format:dCommander_Format "You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds."
@@ -144,7 +144,7 @@ dcommander_Command_Home:
       - narrate format:dCommander_Format "You've been teleported to your home <proc[dCPS]><[Name].to_titlecase><proc[dCPP]>."
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 dCommander_Homes_Location:
   type: procedure
@@ -173,7 +173,7 @@ dCommander_Homes_Get:
 
 
   - define UUID <[UUID]||<player.uuid>>
-  - determine <yaml[dCommander_<[UUID]>].list_keys[Homes].parse[to_titlecase]||li@>
+  - determine <yaml[dCommander_<[UUID]>].list_keys[Homes].parse[to_titlecase]||<list[]>>
 
 
 dCommander_Homes_Get_Max:
@@ -185,8 +185,8 @@ dCommander_Homes_Get_Max:
     - define Player <player>
 
   - define Player <[Player]||<player>>
-  - define Maxes li@1
-  - foreach <yaml[dCommander_Config].list_keys[homes.limit]||li@>:
+  - define Maxes <list[1]>
+  - foreach <yaml[dCommander_Config].list_keys[homes.limit]||<list[]>>:
     - if <[Player].has_permission[dcommander.homes.limit.<[Value]>]>:
       - define Maxes <[Maxes].include[<yaml[dCommander_Config].read[homes.limit.<[Value]>]>]>
 

@@ -8,11 +8,11 @@ dCommander_Command_Heal:
   description: Heal yourself or another player fully.
   permission: dcommander.command.heal
   tab complete:
-  - determine <server.list_online_players.parse[name].filter[starts_with[<context.args.get[1]]>
+  - determine <server.list_online_players.parse[name].filter[starts_with[<context.args.get[1]>]>
   script:
   - choose <context.args.size>:
     - case 0:
-      - inject s@dCommander_Require_Player_Handler
+      - inject dCommander_Require_Player_Handler
       - define Target <player>
     - case 1:
       - define Target <server.match_player[<context.args.get[1]>]||null>
@@ -21,7 +21,7 @@ dCommander_Command_Heal:
         - stop
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
       - stop
 
   - heal <[Target]>
@@ -44,7 +44,7 @@ dCommander_Command_Feed:
   script:
   - choose <context.args.size>:
     - case 0:
-      - inject s@dCommander_Require_Player_Handler
+      - inject dCommander_Require_Player_Handler
       - define Target <player>
     - case 1:
       - define Target <server.match_player[<context.args.get[1]>]||null>
@@ -53,7 +53,7 @@ dCommander_Command_Feed:
         - stop
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
       - stop
 
   - feed <[Target]>
@@ -77,7 +77,7 @@ dCommander_Command_Gamemode:
   description: Changes your own, or another player's gamemode.
   permission: dcommander.command.gamemode
   tab complete:
-  - define V li@Creative|Survival|Adventure|Spectator|0|1|2|3
+  - define V <list[Creative|Survival|Adventure|Spectator|0|1|2|3]>
   - choose <context.args.size>:
     - case 0:
       - determine <[V]>
@@ -86,10 +86,10 @@ dCommander_Command_Gamemode:
     - case 2:
       - determine <server.list_online_players.parse[name].filter[starts_with[<context.args.get[2]>]]>
   script:
-  - define Valid li@Creative|Survival|Adventure|Spectator|0|1|2|3
+  - define Valid <list[Creative|Survival|Adventure|Spectator|0|1|2|3]>
   - choose <context.args.size>:
     - case 1:
-      - inject s@dCommander_Require_Player_Handler
+      - inject dCommander_Require_Player_Handler
       - define Target <player>
     - case 2:
       - define Target <server.match_player[<context.args.get[2]>]||null>
@@ -98,7 +98,7 @@ dCommander_Command_Gamemode:
         - stop
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
       - stop
 
   - define Mode <[Valid].filter[starts_with[<context.args.get[1]>]].get[1]||null>
@@ -139,14 +139,14 @@ dCommander_Command_Fly:
   description: Changes whether you or another player can fly.
   permission: dcommander.command.fly
   script:
-  - define Valid li@On|Off|Toggle
+  - define Valid <list[On|Off|Toggle]>
   - choose <context.args.size>:
     - case 0:
-      - inject s@dCommander_Require_Player_Handler
+      - inject dCommander_Require_Player_Handler
       - define Mode Toggle
       - define Target <player>
     - case 1:
-      - inject s@dCommander_Require_Player_Handler
+      - inject dCommander_Require_Player_Handler
       - define Mode <[Valid].filter[starts_with[<context.args.get[1]>]].get[1]||null>
       - if <[Mode]> == null:
         - narrate format:dCommander_Format "Invalid mode! Valid modes are: <proc[dCPS]><[Valid].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
@@ -165,7 +165,7 @@ dCommander_Command_Fly:
         - stop
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
       - stop
 
   - choose <[Mode]>:

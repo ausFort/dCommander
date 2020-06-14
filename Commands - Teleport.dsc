@@ -8,7 +8,7 @@ dCommander_Command_SetSpawn:
   description: Sets the current world's spawn location, to your position.
   permission: dcommander.command.setspawn
   script:
-  - inject s@dCommander_Require_Ingame_Handler
+  - inject dCommander_Require_Ingame_Handler
   - adjust <player.world> spawn_location:<player.location.block>
   - narrate format:dCommander_Format "Set the spawn of <proc[dCPS]><player.world.name><proc[dCPP]> to <proc[dCFL].context[<player.location.block>|true|true|false]><proc[dCPP]>."
 
@@ -24,7 +24,7 @@ dCommander_Command_Spawn:
   script:
   - choose <context.args.size>:
     - case 0:
-      - inject s@dCommander_Require_Player_Handler
+      - inject dCommander_Require_Player_Handler
       - define Target <player>
     - case 1:
       - define Target <server.match_player[<context.args.get[1]>]||null>
@@ -33,7 +33,7 @@ dCommander_Command_Spawn:
         - stop
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
       - stop
 
   - if <yaml[dCommander_Config].read[teleports.delay.spawn.enabled]||false>:
@@ -50,7 +50,7 @@ dCommander_Command_Spawn:
         - title "subtitle:<proc[dPC].context[You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds.]>" fade_in:0 stay:1s fade_out:0.1s
 
       - else if <[dLoc]> == action_bar:
-        - adjust <player> "action_bar:<proc[dPC].context[You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds.]>"
+        - actionbar "<proc[dPC].context[You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds.]>"
 
       - else:
         - narrate format:dCommander_Format "You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds."
@@ -82,7 +82,7 @@ dCommander_Command_Teleport:
   script:
   - choose <context.args.size>:
     - case 1:
-      - inject s@dCommander_Require_Player_Handler
+      - inject dCommander_Require_Player_Handler
       - define Destination <server.match_offline_player[<context.args.get[1]>]||null>
       - if <[Destination]> == null:
         - narrate format:dCommander_Format "No player can be found by that name!"
@@ -101,7 +101,7 @@ dCommander_Command_Teleport:
         - stop
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
       - stop
 
   - if <[Target]> == <[Destination]>:
@@ -145,7 +145,7 @@ dCommander_Command_Teleport_Here:
   description: Teleport another player to your location.
   permission: dcommander.command.teleporthere
   script:
-  - inject s@dCommander_Require_Ingame_Handler
+  - inject dCommander_Require_Ingame_Handler
   - choose <context.args.size>:
     - case 1:
       - define Target <server.match_player[<context.args.get[1]>]||null>
@@ -161,7 +161,7 @@ dCommander_Command_Teleport_Here:
       - narrate format:dCommander_Format "<proc[dCPS]><[Target].name><proc[dCPP]> has been teleported to you!"
       - narrate format:dCommander_Format "<proc[dCPS]><player.name><proc[dCPP]> teleported you to them!" targets:<[Target]>
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 dCommander_Command_Teleport_pos:
   type: command
@@ -176,7 +176,7 @@ dCommander_Command_Teleport_pos:
   description: Teleport yourself to a set of coordinates.
   permission: dcommander.command.teleportpos
   script:
-  - inject s@dCommander_Require_Ingame_Handler
+  - inject dCommander_Require_Ingame_Handler
   - choose <context.args.size>:
     - case 3:
       - define Error false
@@ -203,4 +203,4 @@ dCommander_Command_Teleport_pos:
       - teleport <player> <[Location]>
       - narrate format:dCommander_Format "You have been teleported to <proc[dCFL].context[<[Location]>|false|true|false]>"
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"

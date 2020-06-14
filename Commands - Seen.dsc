@@ -39,10 +39,8 @@ dCommander_Command_Seen:
           - define Expiry <[Target].ban_info.expiration>
           - narrate format:dCommander_Col_Format "&f    Expiry:<proc[dCPS]> <tern[<[Expiry].in_seconds.is[==].to[0]>]:Never||<[Expiry].time>>"
 
-
-
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <parse:<script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated>>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 dCommander_Command_NameHistory:
   type: command
@@ -71,6 +69,5 @@ dCommander_Command_NameHistory:
 
       - define Names <yaml[dCommander_<[Target].uuid>].read[seen.names]>
       - narrate format:dCommander_Format "Known names of: <[Target].name>"
-      - foreach <[Names]>:
-        - narrate ""
+      - narrate "<proc[dCPP]><[Names].separated_by[<[dCPS]>, <proc[dCPP]>]><proc[dCPS]>."
 

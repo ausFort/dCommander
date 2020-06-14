@@ -15,8 +15,8 @@ dCommander_Command_Back:
   description: Teleport you back to your last location.
   permission: dcommander.command.back
   script:
-  - inject s@dCommander_Require_Ingame_Handler
-  - define Locations <yaml[dCommander_<player.uuid>].read[back_locations]||li@>
+  - inject dCommander_Require_Ingame_Handler
+  - define Locations <yaml[dCommander_<player.uuid>].read[back_locations]||<list[]>>
   - if <[Locations].is_empty>:
     - narrate format:dCommander_Format "You have not been teleported recently!"
     - stop
@@ -36,7 +36,7 @@ dCommander_Command_Back:
         - title "subtitle:<proc[dPC].context[You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds.]>" fade_in:0 stay:1s fade_out:0.1s
 
       - else if <[dLoc]> == action_bar:
-        - adjust <player> "action_bar:<proc[dPC].context[You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds.]>"
+        - actionbar "<proc[dPC].context[You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds.]>"
 
       - else:
         - narrate format:dCommander_Format "You will be teleported in <proc[dCPS]><[Delay].sub[<[Value].sub[1]>]><proc[dCPP]> seconds."
@@ -58,7 +58,7 @@ dCommander_Back_Saves:
     - flag <player> dCommander_Back:!
     - stop
 
-  - define Current <yaml[dCommander_<player.uuid>].read[back_locations]||li@>
+  - define Current <yaml[dCommander_<player.uuid>].read[back_locations]||<list[]>>
   - if <[Current].size> >= <yaml[dCommander_Config].read[teleports.back.limit]>:
     - yaml set back_locations:<-:<[Current].first> id:dCommander_<player.uuid>
 
@@ -68,9 +68,9 @@ dCommander_Back_Saves:
     - inject locally add_location
     on player killed:
     - if <yaml[dCommander_Config].read[teleports.back.death]||false>:
-    - define Current <yaml[dCommander_<player.uuid>].read[back_locations]||li@>
-    - if <[Current].size> >= <yaml[dCommander_Config].read[teleports.back.limit]> && <[Current].is_empty.not>:
-      - yaml set back_locations:<-:<[Current].first> id:dCommander_<player.uuid>
+      - define Current <yaml[dCommander_<player.uuid>].read[back_locations]||<list[]>>
+      - if <[Current].size> >= <yaml[dCommander_Config].read[teleports.back.limit]> && <[Current].is_empty.not>:
+        - yaml set back_locations:<-:<[Current].first> id:dCommander_<player.uuid>
 
-    - yaml set back_locations:->:<context.origin> id:dCommander_<player.uuid>
+      - yaml set back_locations:->:<context.origin> id:dCommander_<player.uuid>
 

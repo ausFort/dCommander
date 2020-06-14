@@ -11,7 +11,7 @@ dCommander_Command_Godmode:
   description: Changes whether you or another player has godmode.
   permission: dcommander.command.godmode
   script:
-  - define Valid li@On|Off|Toggle
+  - define Valid <list[On|Off|Toggle]>
   - choose <context.args.size>:
     - case 0:
       - if <context.server>:

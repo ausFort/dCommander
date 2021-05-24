@@ -5,7 +5,7 @@ dcommander_Command_SetHome:
   usage: /sethome <&lt>home name<&gt>
 
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
 
   description: Set a new home to your current location.
 
@@ -32,7 +32,7 @@ dcommander_Command_SetHome:
       - narrate format:dCommander_Format "New home <proc[dCPS]><[Name].to_titlecase><proc[dCPP]> set at <proc[dCFL].context[<player.location.block>|true|true|true]><proc[dCPP]>."
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 
 dCommander_Command_DeleteHome:
@@ -42,16 +42,12 @@ dCommander_Command_DeleteHome:
   usage: /delhome <&lt>home name<&gt>
 
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
 
   description: Deletes your home with the given name (if it exists).
 
-  tab complete:
-  - choose <context.args.size>:
-    - case 0:
-      - determine <proc[dCommander_Homes_Get]>
-    - default:
-      - determine <proc[dCommander_Homes_Get].filter[starts_with[<context.args.last>]]>
+  tab completions:
+    0 1: <proc[dCommanger_Homes_Get]>
 
   permission: dcommander.command.delhome
   script:
@@ -73,7 +69,7 @@ dCommander_Command_DeleteHome:
       - yaml set homes.<[Name]>:! id:dCommander_<player.uuid>
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 dcommander_Command_Home:
   type: command
@@ -82,16 +78,12 @@ dcommander_Command_Home:
   usage: /home <&lt>home name<&gt>
 
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
 
   description: Go to one of your homes.
 
-  tab complete:
-  - choose <context.args.size>:
-    - case 0:
-      - determine <proc[dCommander_Homes_Get]>
-    - default:
-      - determine <proc[dCommander_Homes_Get].filter[starts_with[<context.args.last>]]>
+  tab completions:
+    0 1: <proc[dCommanger_Homes_Get]>
 
   permission: dcommander.command.home
   script:
@@ -144,7 +136,7 @@ dcommander_Command_Home:
       - narrate format:dCommander_Format "You've been teleported to your home <proc[dCPS]><[Name].to_titlecase><proc[dCPP]>."
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 dCommander_Homes_Location:
   type: procedure

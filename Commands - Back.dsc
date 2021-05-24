@@ -11,7 +11,7 @@ dCommander_Command_Back:
   - return
   usage: /back
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: Teleport you back to your last location.
   permission: dcommander.command.back
   script:

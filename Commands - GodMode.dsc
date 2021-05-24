@@ -4,12 +4,14 @@ dCommander_Command_Godmode:
   name: godmode
   aliases:
   - god
-  - godm
-  usage: /godmode (on/off/{toggle) (player)
+  usage: /godmode (on/off/{toggle}) (player)
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: Changes whether you or another player has godmode.
   permission: dcommander.command.godmode
+  tab completions:
+    0 1: on|off|toggle
+    2: <server.online_players.parse[name]>
   script:
   - define Valid <list[On|Off|Toggle]>
   - choose <context.args.size>:

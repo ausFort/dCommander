@@ -4,7 +4,7 @@ dCommander_Command_SetWarp:
   name: setwarp
   usage: /setwarp <&lt>warp name<&gt>
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: Set a warp to your current location.
   permission: dcommander.command.setwarp
   script:
@@ -22,7 +22,7 @@ dCommander_Command_SetWarp:
       - run dCommander_Warps_Set def:<[Name]>|<player.location.block>|<player> instantly
       - narrate format:dCommander_Format "Warp <proc[dCPS]><[Name]><proc[dCPP]> created at <proc[dCFL].context[<proc[dCommander_Warps_Location].context[<[Name]>]>|true|true|true]><proc[dCPP]>."
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 dCommander_Command_DeleteWarp:
   type: command
@@ -30,14 +30,10 @@ dCommander_Command_DeleteWarp:
   name: delwarp
   usage: /delwarp <&lt>warp name<&gt>
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: Deletes the warp with the given name (if it exists).
-  tab complete:
-  - choose <context.args.size>:
-    - case 0:
-      - determine <proc[dCommander_Warps_Get].context[true]>
-    - default:
-      - determine <proc[dCommander_Warps_Get].context[true].filter[starts_with[<context.args.last>]]>
+  tab completions:
+    0 1: <proc[dCommander_Warps_Get].context[true]>
   permission: dcommander.command.delwarp
   script:
   - choose <context.args.size>:
@@ -54,7 +50,7 @@ dCommander_Command_DeleteWarp:
       - narrate format:dCommander_Format "Removed warp <proc[dCPS]><[Name]><proc[dCPP]> from <proc[dCFL].context[<proc[dCommander_Warps_Location].context[<[Name]>]>|true|true|true]><proc[dCPP]>."
       - yaml set <[Name]>:! id:dCommander_Warps
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 dCommander_Command_Warp:
   type: command
@@ -62,14 +58,10 @@ dCommander_Command_Warp:
   name: warp
   usage: /warp <&lt>warp name<&gt>
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: Warp to a location.
-  tab complete:
-  - choose <context.args.size>:
-    - case 0:
-      - determine <proc[dCommander_Warps_Get]>
-    - default:
-      - determine <proc[dCommander_Warps_Get].filter[starts_with[<context.args.last>]]>
+  tab completions:
+    0 1: <proc[dCommander_Warps_Get]>
   permission: dcommander.command.warp
   script:
   - inject dCommander_Require_Ingame_Handler
@@ -116,7 +108,7 @@ dCommander_Command_Warp:
       - teleport <player> <proc[dCommander_Warps_Location].context[<[Target]>]>
       - narrate format:dCommander_Format "You have been warped to <proc[dCPS]><[Target].to_titlecase><proc[dCPP]>."
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 dCommander_Warps_Location:
   type: procedure

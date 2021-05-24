@@ -4,11 +4,11 @@ dCommander_Command_Heal:
   name: heal
   usage: /heal (player)
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: Heal yourself or another player fully.
   permission: dcommander.command.heal
-  tab complete:
-  - determine <server.list_online_players.parse[name].filter[starts_with[<context.args.get[1]>]>
+  tab completions:
+    1: <server.online_players.parse[name]>
   script:
   - choose <context.args.size>:
     - case 0:
@@ -21,7 +21,7 @@ dCommander_Command_Heal:
         - stop
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
       - stop
 
   - heal <[Target]>
@@ -38,9 +38,11 @@ dCommander_Command_Feed:
   name: feed
   usage: /feed (player)
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: Feed yourself or another player fully.
   permission: dcommander.command.feed
+  tab completions:
+    1: <server.online_players.parse[name]>
   script:
   - choose <context.args.size>:
     - case 0:
@@ -53,7 +55,7 @@ dCommander_Command_Feed:
         - stop
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
       - stop
 
   - feed <[Target]>
@@ -73,20 +75,14 @@ dCommander_Command_Gamemode:
   - mode
   usage: /gamemode <&lt>mode<&gt> (player)
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: Changes your own, or another player's gamemode.
   permission: dcommander.command.gamemode
-  tab complete:
-  - define V <list[Creative|Survival|Adventure|Spectator|0|1|2|3]>
-  - choose <context.args.size>:
-    - case 0:
-      - determine <[V]>
-    - case 1:
-      - determine <[V].filter[starts_with[<context.args.get[1]>]]>
-    - case 2:
-      - determine <server.list_online_players.parse[name].filter[starts_with[<context.args.get[2]>]]>
+  tab completions:
+    0 1: Creative|Survival|Adventure|Spectator
+    2: <server.online_players.parse[name]>
   script:
-  - define Valid <list[Creative|Survival|Adventure|Spectator|0|1|2|3]>
+  - define Valid <list[Creative|Survival|Adventure|Spectator]>
   - choose <context.args.size>:
     - case 1:
       - inject dCommander_Require_Player_Handler
@@ -98,23 +94,13 @@ dCommander_Command_Gamemode:
         - stop
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
       - stop
 
   - define Mode <[Valid].filter[starts_with[<context.args.get[1]>]].get[1]||null>
   - if <[Mode]> == null:
     - narrate format:dCommander_Format "Invalid Gamemode! Valid modes are: <proc[dCPS]><[Valid].separated_by[<proc[dCPP]>, <proc[dCPS]>]><proc[dCPP]>."
     - stop
-
-  - choose <[Mode]>:
-    - case 0:
-      - define Mode Survival
-    - case 1:
-      - define Mode Creative
-    - case 2:
-      - define Mode Adventure
-    - case 3:
-      - define Mode Spectator
 
   - adjust <[Target]> gamemode:<[Mode]>
   - if <[Target]> == <player||null>:
@@ -133,11 +119,14 @@ dCommander_Command_Fly:
   - flymode
   - canfly
   - wings
-  usage: /fly (on/off/{toggle) (player)
+  usage: /fly (on/off/{toggle}) (player)
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: Changes whether you or another player can fly.
   permission: dcommander.command.fly
+  tab completions:
+    0 1: on|off|toggle
+    2: <server.online_players.parse[name]>
   script:
   - define Valid <list[On|Off|Toggle]>
   - choose <context.args.size>:
@@ -165,7 +154,7 @@ dCommander_Command_Fly:
         - stop
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
       - stop
 
   - choose <[Mode]>:

@@ -4,7 +4,7 @@ dCommander_Command_SetSpawn:
   name: setspawn
   usage: /setspawn
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: Sets the current world's spawn location, to your position.
   permission: dcommander.command.setspawn
   script:
@@ -18,9 +18,11 @@ dCommander_Command_Spawn:
   name: spawn
   usage: /spawn (player)
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: Teleports you or another player to the spawn of the world they are in.
   permission: dcommander.command.spawn
+  tab completions:
+    0 1: <server.players.parse[name]>
   script:
   - choose <context.args.size>:
     - case 0:
@@ -33,7 +35,7 @@ dCommander_Command_Spawn:
         - stop
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
       - stop
 
   - if <yaml[dCommander_Config].read[teleports.delay.spawn.enabled]||false>:
@@ -76,9 +78,11 @@ dCommander_Command_Teleport:
   - tele
   usage: /teleport [<&lt>destination player<&gt>/<&lt>target player<&gt> <&lt>destination player<&gt>]
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: Teleport to another player, or teleport someone else. Can teleport to offline players.
   permission: dcommander.command.teleport
+  tab completions:
+  0 1 2: <server.players.parse[name[]]>
   script:
   - choose <context.args.size>:
     - case 1:
@@ -101,7 +105,7 @@ dCommander_Command_Teleport:
         - stop
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
       - stop
 
   - if <[Target]> == <[Destination]>:
@@ -141,9 +145,11 @@ dCommander_Command_Teleport_Here:
   - bringhere
   usage: /teleporthere <&lt>player<&gt>
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: Teleport another player to your location.
   permission: dcommander.command.teleporthere
+  tab completions:
+    0 1: <server.online_players.exclude[<player>].parse[name]>
   script:
   - inject dCommander_Require_Ingame_Handler
   - choose <context.args.size>:
@@ -161,7 +167,7 @@ dCommander_Command_Teleport_Here:
       - narrate format:dCommander_Format "<proc[dCPS]><[Target].name><proc[dCPP]> has been teleported to you!"
       - narrate format:dCommander_Format "<proc[dCPS]><player.name><proc[dCPP]> teleported you to them!" targets:<[Target]>
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 dCommander_Command_Teleport_pos:
   type: command
@@ -172,7 +178,7 @@ dCommander_Command_Teleport_pos:
   - gotopos
   usage: /teleportpos <&lt>x<&gt> <&lt>z<&gt> <&lt>z<&gt>
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: Teleport yourself to a set of coordinates.
   permission: dcommander.command.teleportpos
   script:
@@ -203,4 +209,4 @@ dCommander_Command_Teleport_pos:
       - teleport <player> <[Location]>
       - narrate format:dCommander_Format "You have been teleported to <proc[dCFL].context[<[Location]>|false|true|false]>"
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"

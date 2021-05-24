@@ -6,21 +6,16 @@ dCommander_Command_Item:
   - i
   usage: /item <&lt>item<&gt> (quantity)
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: Give yourself an item.
   permission: dcommander.command.item
-  tab complete:
-  - define ItemList <server.list_material_types.filter[is_item].parse[name]>
-  - choose <context.args.size>:
-    - case 0:
-      - determine <[ItemList]>
-    - case 1:
-      - determine <[ItemList].filter[contains[<context.args.last>]]>
+  tab completions:
+   0 1: ItemList <server.material_types.filter[is_item].parse[name]>
   script:
   - inject dCommander_Require_Ingame_Handler
   - choose <context.args.size>:
     - case 0:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
       - stop
 
     - default:
@@ -30,7 +25,7 @@ dCommander_Command_Item:
         - stop
 
       - if <yaml[dCommander_Config].read[give.per_item_permissions]> && <player.has_permission[dcommander.command.item.unrestricted].not>:
-        - if <player.has_permission[dCommander.command.item.<[Item].scriptname||<[Item].material.name>>].not>:
+        - if <player.has_permission[dCommander.command.item.<[Item].script.name||<[Item].material.name>>].not>:
           - narrate format:dCommander_Format "You don't have permission to give this item!"
           - stop
 
@@ -43,7 +38,7 @@ dCommander_Command_Item:
           - stop
 
       - give <[Item]> quantity:<[Quantity]>
-      - narrate format:dCommander_Format "You have been given <proc[dCPS]><[Item].display||<[Item].material.name>><proc[dCPP]> x <proc[dCPS]><[Quantity]><proc[dCPP]>."
+      - narrate format:dCommander_Format "You have been given <proc[dCPS]><[Item].display||<[Item].material.translated_name>><proc[dCPP]> x <proc[dCPS]><[Quantity]><proc[dCPP]>."
 
 dCommander_Command_Enchant:
   type: command
@@ -55,14 +50,14 @@ dCommander_Command_Enchant:
   - enchants
   usage: /enchant <&lt>list/enchantment(<&co>level)<&gt> ...
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: Enchant the item in your hand.
   permission: dcommander.command.enchant
   script:
-  - define valid <server.list_enchantments.parse[to_titlecase]>
+  - define valid <server.enchantments.parse[to_titlecase]>
   - choose <context.args.size>:
     - case 0:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
     - default:
       - if <context.args.get[1]> == list:

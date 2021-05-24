@@ -8,7 +8,7 @@ dCommand_Command_InventorySee:
   - checkinventory
   usage: /inventorysee <&lt>player<&gt>
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: See another player's inventory.
   permission: dcommander.command.inventorysee
   script:
@@ -27,7 +27,7 @@ dCommand_Command_InventorySee:
       - narrate format:dCommander_Format "Opening inventory of <proc[dCPS]><[Target].name><proc[dCPP]>."
       - inventory open d:<[Target].inventory>
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 dCommander_Command_EnderSee:
   type: command
@@ -38,9 +38,11 @@ dCommander_Command_EnderSee:
   - enderchestsee
   usage: /endersee <&lt>player<&gt>
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: See a player's ender chest.
   permission: dcommander.command.endersee
+  tab completions:
+    0 1: <server.players.parse[name]>
   script:
   - inject dCommander_Require_Ingame_Handler
   - choose <context.args.size>:
@@ -53,7 +55,7 @@ dCommander_Command_EnderSee:
       - narrate format:dCommander_Format "Opening enderchest of <proc[dCPS]><[Target].name><proc[dCPP]>."
       - inventory open d:<[Target].enderchest>
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
 
 dCommander_Command_ClearInventory:
   type: command
@@ -65,9 +67,11 @@ dCommander_Command_ClearInventory:
   - empty
   usage: /clearinventory (player)
   allowed help:
-  - determine <player.has_permission[<script.yaml_key[permission]>]||<context.server>>
+  - determine <player.has_permission[<script.data_key[permission]>]||<context.server>>
   description: Clear your own or another player's inventory.
   permission: dcommander.command.clearinventory
+  tab completions:
+    0 1: <server.players.parse[name]>
   script:
   - choose <context.args.size>:
     - case 0:
@@ -80,7 +84,7 @@ dCommander_Command_ClearInventory:
         - stop
 
     - default:
-      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.yaml_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
+      - narrate format:dCommander_Format "Usage:<proc[dCPS]> <script.data_key[usage].split[ ].set[/<context.alias.to_lowercase>].at[1].space_separated.parsed>"
       - stop
 
   - inventory clear d:<[Target].inventory>

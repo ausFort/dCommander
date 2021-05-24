@@ -43,7 +43,7 @@ dCommander_Initialise_Main:
       - else:
         - yaml load:/dCommander/config.yml id:dCommander_Config
       - run dCommander_Players_Save instantly
-      - if <server.list_scripts.parse[name].contains[dCommander_Command_Warp]>:
+      - if <server.scripts.parse[name].contains[dCommander_Command_Warp]>:
         - run dCommander_Warps_Save instantly
       - announce to_console format:dCommander_Format "dCommander successfully loaded."
     on shutdown:
@@ -101,7 +101,7 @@ dCommander_Players_Save:
   type: task
   debug: false
   script:
-    - foreach <server.list_players>:
+    - foreach <server.players>:
       - if <server.has_file[/dCommander/saves/<[Value].uuid>.yml].not>:
         - yaml create id:dCommander_<[Value].uuid>
       - else if <yaml.list.contains[dCommander_<[Value].uuid>].not>:
